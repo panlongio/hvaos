@@ -1,0 +1,11 @@
+---
+description: Pipeline steps for development, bug fixes, releases, and rollbacks.
+globs: *
+alwaysApply: true
+---
+# 03 - 流程卡片 (Processes)
+
+- **任务执行标准流程**：意图分析 -> 制定方案 -> 人类审批 -> 执行与产出 -> **进行存量防错校验** -> 生成 `walkthrough.md` 交付报告。
+- **发布与撤回流程**：发布或提交前必须运行既定的前置清理与预检步骤，在异常时按步骤立刻撤回。
+- **关联文档**：
+  - 流程步骤详述：[03-processes.md](file://./03-processes.md)

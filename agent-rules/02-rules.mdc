@@ -1,0 +1,14 @@
+---
+description: Code guidelines, UI aesthetics, security constraints, and database rules.
+globs: *
+alwaysApply: true
+---
+# 02 - 规则卡片 (Rules)
+
+- **核心红线**：未获人类在对话中明确输入“同意/继续”前，禁止改动任何文件。严禁在代码或配置文件中提交任何密钥。
+- **自媒体/内容运营红线**（如适用）：`{{MEDIA_SPECIFIC_REDLINES}}` (调性风趣/客观、字数格式约束、零版权争议等)
+- **生活助理/理财红线**（如适用）：`{{LIFE_SPECIFIC_REDLINES}}` (隐私安全掩码、预算超额预警等)
+- **开发与设计红线**（如适用）：`{{CODE_SPECIFIC_REDLINES}}` (类型强检查，精美 UI，事务安全等)
+- **文档写作与防膨胀红线**：AI 新建或修改项目文档、报告时，必须严格遵守《零冗余文档写作规范》，禁止输出废话，禁止全量复制代码块。
+- **关联文档**：
+  - 边界规则详述：[02-rules.md](file://./02-rules.md)

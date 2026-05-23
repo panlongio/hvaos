@@ -1,0 +1,14 @@
+---
+description: Product intent, audience, differentiators, and reverse boundaries.
+globs: *
+alwaysApply: true
+---
+# 01 - 意图卡片 (Intent)
+
+- **项目名称**：`{{PROJECT_NAME}}`
+- **核心定位与使命**：`{{PROJECT_MISSION}}`
+- **目标用户**：`{{TARGET_AUDIENCE}}`
+- **核心差异点**：`{{DIFFERENTIATORS}}`
+- **反向边界 (不做什么)**：`{{ANTI_GOALS}}`
+- **关联文档**：
+  - 核心愿景与大纲：[01-intent.md](file://./01-intent.md)

@@ -1,0 +1,13 @@
+---
+description: Acceptance criteria, compiler commands, and test verification.
+globs: *
+alwaysApply: true
+---
+# 05 - 验收卡片 (Acceptance)
+
+- **硬性预检门禁**：运行并通过 `{{ACCEPTANCE_CHECK}}` (例如类型编译通过 / 排版敏感词过滤通过)。
+- **回归与存量校验**：任务完成前必须进行存量防错校验，以确保未破坏项目原有功能或内容一致性。
+- **交付物要求**：必须在交付报告中提供明确、可重现的验证步骤。
+- **绝对不可接受的结果 (负面清单)**：`{{UNACCEPTABLE_OUTCOME_LIST}}` (禁止残留临时垃圾、禁止出现敏感词、排版格式错乱等)
+- **关联文档**：
+  - 验收指标详述：[05-acceptance.md](file://./05-acceptance.md)

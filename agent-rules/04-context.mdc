@@ -1,0 +1,11 @@
+---
+description: Current architecture, technical debt, and failed attempts tracking.
+globs: *
+alwaysApply: true
+---
+# 04 - 上下文卡片 (Context)
+
+- **项目运行环境**：`{{ENVIRONMENT_SUMMARY}}`
+- **避坑警示**：每次进行技术方案或创意方案设计时，必须阅读“存量问题与历史失败方案”记录，严禁重复提交被验证为不可行的技术/运营方向。
+- **关联文档**：
+  - 上下文与避坑记录：[04-context.md](file://./04-context.md)
