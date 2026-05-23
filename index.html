@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HvAOS — Human vs AI OS | 人机协作与意图对齐网关</title>
+    <meta name="description" content="HvAOS (Human vs AI OS) 是一个领域无关的 5 层规则协议系统。它充当您的 AI 运行网关（Gatekeeper），通过意图、规则、流程、上下文及验收 5 层控制，牢牢守住任何项目的执行质量与合规红线，防止 AI 失控或生成废话。">
+    <meta name="keywords" content="HvAOS, Human vs AI OS, AI协作协议, AI规则网关, CursorRules, Agentic, PromptEngineering">
+    <meta name="author" content="panlongio">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                <span class="logo-text">HvA<span>OS</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#features">架构设计</a>
+                <a href="#sandbox">预设沙盒</a>
+                <a href="#bootloader">启动引导</a>
+                <a href="https://github.com/panlongio/hvaos" target="_blank" class="nav-github-btn">
+                    <i class="fa-brands fa-github"></i> Star on GitHub
+                </a>
+            </nav>
+            <button class="mobile-menu-toggle" id="mobile-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Nav Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#features">架构设计</a>
+        <a href="#sandbox">预设沙盒</a>
+        <a href="#bootloader">启动引导</a>
+        <a href="https://github.com/panlongio/hvaos" target="_blank" class="mobile-github-btn">
+            <i class="fa-brands fa-github"></i> GitHub
+        </a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-glow"></div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    v1.0.0 Stable
+                </div>
+                <h1 class="hero-title">
+                    让 AI 按照您的<br>
+                    <span>真实意图</span> 完美产出
+                </h1>
+                <p class="hero-desc">
+                    <strong>HvAOS (Human vs AI OS)</strong> 是一个极简、领域无关（Domain-Neutral）的 AI 协同协议与规则模板系统。它作为 AI 在您项目中的<strong>“规则运行网关（Gatekeeper）”</strong>，通过 5 层架构牢牢守住任何项目的执行质量与合规红线，防范 AI 脱缰或生成废话。
+                </p>
+                <div class="hero-actions">
+                    <a href="#bootloader" class="btn btn-primary">
+                        <i class="fa-solid fa-bolt"></i> 立即使用
+                    </a>
+                    <a href="https://github.com/panlongio/hvaos" target="_blank" class="btn btn-secondary">
+                        <i class="fa-brands fa-github"></i> 查看源码
+                    </a>
+                </div>
+            </div>
+            <div class="hero-terminal">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="terminal-title">hvaos@panlongio:~</span>
+                </div>
+                <div class="terminal-body">
+                    <p class="cmd"><span class="prompt">$</span> hvaos init --domain multiple</p>
+                    <p class="log success">[OK] Target directory identified: ~/workspace</p>
+                    <p class="log info">[INFO] Reading 5-layer framework template...</p>
+                    <p class="log info">[INFO] - 01-intent (意图层) loaded.</p>
+                    <p class="log info">[INFO] - 02-rules (规则层) loaded.</p>
+                    <p class="log info">[INFO] - 03-processes (流程层) loaded.</p>
+                    <p class="log info">[INFO] - 04-context (上下文层) loaded.</p>
+                    <p class="log info">[INFO] - 05-acceptance (验收层) loaded.</p>
+                    <p class="log warning">[WARN] Active Gatekeeper: 02-rules.mdc and 05-acceptance.mdc will enforce strict constraints.</p>
+                    <p class="log success">[SUCCESS] HvAOS has been successfully loaded into environment!</p>
+                    <p class="cmd"><span class="prompt">$</span> <span class="cursor">_</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5-Layer Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">5 层卡片架构，对齐 AI 意图</h2>
+                <p class="section-subtitle">通过将人机协作拆解为五个清晰的认知维度，彻底约束 AI 的运行边界，实现商用级的渐进交付与防错机制。</p>
+            </div>
+            <div class="features-grid">
+                <!-- Layer 1 -->
+                <div class="feature-card" data-layer="1">
+                    <div class="card-glow"></div>
+                    <div class="card-icon"><i class="fa-solid fa-compass"></i></div>
+                    <div class="card-layer-num">LAYER 01</div>
+                    <h3 class="card-title">01-intent.md (意图层)</h3>
+                    <p class="card-desc">定义项目的核心定位、目标受众与核心差异点，并在此明确**“反向边界（不做任何多余或偏离方向的事）”**，在源头上砍掉 AI 的发散性偏见。</p>
+                </div>
+                <!-- Layer 2 -->
+                <div class="feature-card" data-layer="2">
+                    <div class="card-glow"></div>
+                    <div class="card-icon"><i class="fa-solid fa-gavel"></i></div>
+                    <div class="card-layer-num">LAYER 02</div>
+                    <h3 class="card-title">02-rules.md (规则层)</h3>
+                    <p class="card-desc">建立项目的硬性红线与安全门槛（如严禁提交密钥、特定交互规范）。AI 在任何产出修改前，必须在对话中**显式获得人类的“同意/继续”**许可。</p>
+                </div>
+                <!-- Layer 3 -->
+                <div class="feature-card" data-layer="3">
+                    <div class="card-glow"></div>
+                    <div class="card-icon"><i class="fa-solid fa-arrows-spin"></i></div>
+                    <div class="card-layer-num">LAYER 03</div>
+                    <h3 class="card-title">03-processes.md (流程层)</h3>
+                    <p class="card-desc">规划开发或执行的步骤闭环。拒绝盲目修改，强制推行**“方案先行 -> 获得授权 -> 渐进修改 -> 存量防错”**的严密执行环，规避二次 Bug 产生。</p>
+                </div>
+                <!-- Layer 4 -->
+                <div class="feature-card" data-layer="4">
+                    <div class="card-glow"></div>
+                    <div class="card-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                    <div class="card-layer-num">LAYER 04</div>
+                    <h3 class="card-title">04-context.md (上下文层)</h3>
+                    <p class="card-desc">沉淀项目特有的技术栈、踩坑记录与历史负债日志。为 AI 补充足够的项目记忆，确保新产出与旧文件结构完美融合，不脱钩。</p>
+                </div>
+                <!-- Layer 5 -->
+                <div class="feature-card" data-layer="5">
+                    <div class="card-glow"></div>
+                    <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="card-layer-num">LAYER 05</div>
+                    <h3 class="card-title">05-acceptance.md (验收层)</h3>
+                    <p class="card-desc">硬性准入与准出指标。要求所有改动都必须通过本地格式预检与存量防错校验。只有通过所有红线门槛，AI 方可提交人类进行最后验收。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sandbox Section -->
+    <section class="sandbox" id="sandbox">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">实时预设沙盒演练</h2>
+                <p class="section-subtitle">点击下方不同领域的预设标签，查看 HvAOS 模板在不用场景下的“自适应规则拦截器”输出内容。</p>
+            </div>
+            
+            <div class="sandbox-tabs">
+                <button class="tab-btn active" data-preset="coding">
+                    <i class="fa-solid fa-code"></i> 💻 软件开发
+                </button>
+                <button class="tab-btn" data-preset="media">
+                    <i class="fa-solid fa-pen-nib"></i> ✍️ 自媒体写稿
+                </button>
+                <button class="tab-btn" data-preset="life">
+                    <i class="fa-solid fa-heart-pulse"></i> 📅 个人助理/生活理财
+                </button>
+            </div>
+
+            <div class="sandbox-console">
+                <div class="console-header">
+                    <div class="console-header-left">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="console-tab-name" id="console-domain-title">Coding Mode</span>
+                    </div>
+                    <div class="console-actions">
+                        <span class="console-badge">Rules Preview</span>
+                    </div>
+                </div>
+                <div class="console-body">
+                    <pre><code id="console-code" class="fira-code"></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootloader Section -->
+    <section class="bootloader" id="bootloader">
+        <div class="container bootloader-container">
+            <div class="bootloader-text">
+                <h2 class="section-title">一键唤醒 AI，激活您的 HvAOS</h2>
+                <p class="section-subtitle">
+                    将本地的 `hvaos/` 文件夹复制到任意项目根目录中，然后将下方命令行发给 AI 助手（如 Cursor、Claude Code、Gemini 等），它将自动按流程读取卡片并与您交互启动。
+                </p>
+                <div class="prompt-box">
+                    <div class="prompt-header">
+                        <span>AI 启动初始化指令</span>
+                        <button class="copy-btn" id="copy-prompt-btn">
+                            <span id="copy-icon"><i class="fa-regular fa-copy"></i></span>
+                            <span id="copy-text">复制指令</span>
+                        </button>
+                    </div>
+                    <div class="prompt-body">
+                        <p id="prompt-content">请读取项目里的 hvaos/README.md 文件，并执行其中的【AI 智能启动与初始化协议】。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bootloader-process">
+                <h3>⚡ 启动过程三部曲：</h3>
+                <div class="step-item">
+                    <div class="step-num">01</div>
+                    <div class="step-text">
+                        <h4>AI 扫描分析</h4>
+                        <p>AI 自动递归读取 5 张 Markdown 卡片，分析其中所有的 {{PLACEHOLDERS}} 占位符与空缺信息。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">02</div>
+                    <div class="step-text">
+                        <h4>精简问答对齐</h4>
+                        <p>AI 自动整理并在聊天框中向您发送 3-5 个精简的选择或问答题，帮助您明确当前项目定位与约束红线。</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">03</div>
+                    <div class="step-text">
+                        <h4>规则装载与生效</h4>
+                        <p>AI 自动填平本地的卡片文件，并为开发工具生成 `.agent/rules/` 以及 IDE 软链接芯片，规则立刻强制生效。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-left">
+                <p>© 2026 <strong>panlongio</strong>. 基于 <a href="https://github.com/panlongio/hvaos/blob/main/LICENSE" target="_blank">MIT 许可证</a> 开源。</p>
+                <p class="domain-info"><i class="fa-solid fa-globe"></i> 官方网址：<a href="https://hvaos.com">hvaos.com</a></p>
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/panlongio/hvaos" target="_blank" class="footer-link">
+                    <i class="fa-brands fa-github"></i> GitHub 仓库
+                </a>
+                <span class="separator">|</span>
+                <span class="footer-author"><i class="fa-solid fa-code"></i> Made with ❤️ by panlongio</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
