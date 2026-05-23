@@ -4,4 +4,6 @@
 .vscode/
 *.log
 .wrangler/
+.cursor/
+.agent/
 
