@@ -372,6 +372,10 @@ function initGenerator() {
     const projectMissionTextarea = document.getElementById("gen-project-mission");
     const previewZipName = document.getElementById("preview-zip-name");
     const downloadBtn = document.getElementById("btn-download-zip");
+    
+    // Custom rule elements
+    const addCustomRuleBtn = document.getElementById("btn-add-custom-rule");
+    const customRulesList = document.getElementById("custom-rules-list");
 
     if (!projectNameInput || !projectMissionTextarea || !downloadBtn) return;
 
@@ -402,6 +406,29 @@ function initGenerator() {
         previewZipName.textContent = cleanName ? `${cleanName}-config.zip` : "hvaos-config.zip";
     });
 
+    // Add custom rule item
+    if (addCustomRuleBtn && customRulesList) {
+        addCustomRuleBtn.addEventListener("click", () => {
+            const item = document.createElement("div");
+            item.className = "custom-rule-item";
+            item.innerHTML = `
+                <input type="text" class="custom-rule-input" placeholder="e.g. 严禁在 production 中引入未授权依赖">
+                <button type="button" class="btn-delete-rule" title="删除该条"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            
+            // Delete button binding
+            const delBtn = item.querySelector(".btn-delete-rule");
+            delBtn.addEventListener("click", () => {
+                item.remove();
+            });
+
+            customRulesList.appendChild(item);
+            
+            // Auto focus on new input
+            item.querySelector("input").focus();
+        });
+    }
+
     // Render default coding checkboxes on load
     renderGeneratorCheckboxes("coding");
 
@@ -431,6 +458,18 @@ function initGenerator() {
                 activeRules.push({
                     text: box.getAttribute("data-text"),
                     detail: box.getAttribute("data-detail")
+                });
+            }
+        });
+
+        // Collect custom rules
+        const customInputs = document.querySelectorAll(".custom-rule-input");
+        customInputs.forEach(input => {
+            const val = input.value.trim();
+            if (val) {
+                activeRules.push({
+                    text: `【自定义规则】${val}`,
+                    detail: "User configured custom runtime constraint."
                 });
             }
         });
