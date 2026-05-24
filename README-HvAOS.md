@@ -40,11 +40,13 @@
 ### 3. 文档自动填充与芯片装载阶段
 1. 获得人类的回答后，自动用真实内容替换 5 个 Markdown 文档中的占位符，保存文件。
 2. **装载规则芯片 (.mdc)**：
+   > [!NOTE]
+   > **「规则芯片」概念澄清**：这里的“芯片”为**纯软件层面的配置规则文件**（如 `.mdc` 等），**无需任何物理硬件支持**。除了支持 IDE 的被动拦截，本协议亦完全兼容命令行终端（如 Claude Code, Aider）及自定义 Agent 框架。
    - 将 `.hvaos/` 目录下对应的 5 个规则卡片（如 `01-intent.mdc`）用人类的回答替换卡片中的占位符。
    - **如果项目涉及代码开发或需要激活 IDE 规则拦截机制**，在终端中执行以下符号链接指令，为 IDE（如 Cursor 等）激活规则卡片：
      ```bash
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      ```
-   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境下（如 Claude Code）**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions 读入当前 Session，保持 100% 规则对齐。
+   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境（如 Claude Code、Aider）或自定义 Agent 框架下**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions/System Prompt 读入当前 Session，保持 100% 规则对齐。
 
 3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活的 5 层规则与运行命令。

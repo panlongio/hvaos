@@ -288,12 +288,14 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
 ### 3. 文档自动填充与芯片装载阶段
 1. 获得人类的回答后，自动用真实内容替换 5 个 Markdown 文档中的占位符，保存文件。
 2. **装载规则芯片 (.mdc)**：
+   > [!NOTE]
+   > **「规则芯片」概念澄清说明**：这里的“芯片”为**纯软件层面的配置规则文件**（如 \`.mdc\` 等），**无需任何物理硬件支持**。除了支持 IDE 的被动拦截，本协议亦完全兼容命令行终端（如 Claude Code, Aider）及自定义 Agent 框架。
    - 将 \`.hvaos/\` 目录下对应的 5 个规则卡片（如 \`01-intent.mdc\`）用人类的回答替换卡片中的占位符。
    - **如果项目涉及代码开发或需要激活 IDE 规则拦截机制**，在终端中执行以下符号链接指令，为 IDE（如 Cursor 等）激活规则卡片：
      \`\`\`bash
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      \`\`\`
-   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境下（如 Claude Code）**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions 读入当前 Session，保持 100% 规则对齐。
+   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境（如 Claude Code、Aider）或自定义 Agent 框架下**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions/System Prompt 读入当前 Session，保持 100% 规则对齐。
 3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活的 5 层规则与运行命令。
 `;
 
@@ -326,7 +328,15 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
 
 ### HvAOS 的解法：逻辑强绑定与自维护
 HvAOS 将所有的 PRD、编码规约、工作流、架构技术债和 DoD 验收标准收敛在 **5 个结构化卡片**中。
-通过 IDE 的规则拦截芯片 (MDC, Markdown Context)，将这些静态 Markdown 文档转换为 **「实时加载的强约束芯片」**。
+这些静态 Markdown 文档将被转换为 **「实时加载的声明式规则配置（软件层面比喻为“规则芯片”）」**：
+
+> [!NOTE]
+> **关于“芯片”概念与全端兼容性的澄清说明**：
+> 1. **非物理硬件**：这里的“芯片/规则芯片”为**纯软件层的配置概念**，代表带有 YAML 元数据的规则拦截文件（如 \`.mdc\`、\`.cursorrules\` 等），**无需任何物理硬件支持**。
+> 2. **IDE 级别（被动读取）**：在 Cursor、Windsurf、Trae 等支持 MDC (Markdown Context) 的 AI IDE 中，通过文件拦截机制，当 AI 修改任意路径的代码时，IDE 会通过文件匹配强行挂载这 5 张规则卡片，AI 在动手前必须遵循。
+> 3. **Agent CLI 级别（软件保底）**：在无 native MDC 解析机制的纯命令行 CLI 环境（如 Claude Code、Aider）下，AI 会在启动会话时自动将这 5 份 \`.md\` 规则文档作为全局静态系统指令（System Instructions）读入当前 Session，实现 100% 规则对齐。
+> 4. **智能体框架级别（系统级注入）**：在自定义 Agent（如 AutoGen、CrewAI、LangChain 等）中，可直接在系统初始化时，通过代码读取这 5 个卡片内容赋给 Agent 对象的 system_instruction 即可运行。
+
 *   **被动读取**：当 AI 修改任意路径的代码时，IDE 会通过文件匹配强行挂载这 5 张规则卡片，AI 在动手前必须遵循。
 *   **主动维护**：AI 在交付任务时（Walkthrough），会自动检测是否引入了新库、改变了目录或踩了新坑，并在后台自动增量更新/修剪上下文卡片，实现**文档与代码的 100% 同步**。
 
