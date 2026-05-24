@@ -67,7 +67,7 @@ PROJECT_MISSION=${PROJECT_MISSION:-$DEFAULT_MISSION}
 
 # Clean folder and create target tree
 echo -e "\n🧹 正在生成本地目录结构..."
-mkdir -p .agent/rules
+mkdir -p .hvaos
 
 # Setup Github Raw Assets Base URL
 RAW_BASE_URL="https://raw.githubusercontent.com/panlongio/hvaos/main"
@@ -92,9 +92,9 @@ for file in "${FILES[@]}"; do
     # Move out of temp into target root
     mv "$TEMP_FILE" "${file}.md"
     
-    # Create matching MDC chips in .agent/rules/
-    echo -e "🛡️ 正在生成并链接芯片 ${PURPLE}.agent/rules/${file}.mdc${NC}..."
-    cat <<EOF > ".agent/rules/${file}.mdc"
+    # Create matching MDC chips in .hvaos/
+    echo -e "🛡️ 正在生成并链接芯片 ${PURPLE}.hvaos/${file}.mdc${NC}..."
+    cat <<EOF > ".hvaos/${file}.mdc"
 ---
 description: Rule alignment for ${file} in ${PROJECT_NAME}
 globs: *
@@ -104,13 +104,14 @@ Please align all operations with the definitions located in the root-level ${fil
 EOF
 done
 
-# Perform IDE rules symbolic link setup
+# Perform IDE rules symbolic link setup (e.g. for Cursor)
 echo -e "\n🔗 正在与 IDE 建立芯片关联通道 (Linking to .cursor/rules)..."
 mkdir -p .cursor
-ln -sf ../.agent/rules .cursor/rules
+ln -sf ../.hvaos .cursor/rules
 
 # Success Declaration
 echo -e "\n${GREEN}✨ [SUCCESS] HvAOS 规则芯片已全部装载完成！${NC}"
-echo -e "💡 已经自动在当前项目根目录下生成了 5 层规则文档及 \`.cursor/rules\` 的软链接芯片。"
-echo -e "🤖 下次您在此项目唤醒 AI（如 Cursor/Claude Code）时，规则将强制开始拦截生效。"
+echo -e "💡 已经自动在当前项目根目录下生成了 5 层规则文档及 \`.hvaos/\` 核心规则目录。"
+echo -e "🔗 已为 Cursor 等 IDE 自动创建了 \`.cursor/rules\` 指向 \`.hvaos/\` 的软链接。"
+echo -e "🤖 下次您在此项目唤醒 AI 助手时，规则将强制拦截生效。"
 echo -e "-------------------------------------------------------------"

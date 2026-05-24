@@ -2,7 +2,7 @@
 const presetsData = {
     coding: {
         title: "Coding Mode (💻 软件开发)",
-        code: `<span class="comment"># HvAOS - 💻 软件开发规则预设 (.agent/rules/02-rules.mdc)</span>
+        code: `<span class="comment"># HvAOS - 💻 软件开发规则预设 (.hvaos/02-rules.mdc)</span>
 
 <span class="key">- 核心开发红线 (Redlines):</span>
   1. 未在对话中明确获得人类输入 <span class="string">"同意"</span> 或 <span class="string">"继续"</span> 前，禁止修改任何代码或文件。
@@ -18,7 +18,7 @@ const presetsData = {
     },
     media: {
         title: "Media Mode (✍️ 自媒体写稿)",
-        code: `<span class="comment"># HvAOS - ✍️ 自媒体与内容运营预设 (.agent/rules/02-rules.mdc)</span>
+        code: `<span class="comment"># HvAOS - ✍️ 自媒体与内容运营预设 (.hvaos/02-rules.mdc)</span>
 
 <span class="key">- 核心内容红线 (Redlines):</span>
   1. 内容中严禁出现 any 未经证实的谣言，严禁搬运或抄袭未授权的内容。
@@ -34,7 +34,7 @@ const presetsData = {
     },
     life: {
         title: "Life Mode (📅 个人助理与生活理财)",
-        code: `<span class="comment"># HvAOS - 📅 个人助理/生活理财规则预设 (.agent/rules/02-rules.mdc)</span>
+        code: `<span class="comment"># HvAOS - 📅 个人助理/生活理财规则预设 (.hvaos/02-rules.mdc)</span>
 
 <span class="key">- 核心隐私红线 (Redlines):</span>
   1. <span class="accent">【绝对禁令】</span> 严禁向任何大模型明文暴露银行卡密码、社保号、真实家庭住址等绝对隐私。
@@ -237,7 +237,7 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
     // Build matching .mdc files
     const mdFiles = ["01-intent", "02-rules", "03-processes", "04-context", "05-acceptance"];
     mdFiles.forEach(f => {
-        templates[`.agent/rules/${f}.mdc`] = `---
+        templates[`.hvaos/${f}.mdc`] = `---
 description: Rule alignment for ${f} in ${projectName}
 globs: *
 ---

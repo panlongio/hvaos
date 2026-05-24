@@ -5,5 +5,5 @@
 *.log
 .wrangler/
 .cursor/
-.agent/
+.hvaos/
 
