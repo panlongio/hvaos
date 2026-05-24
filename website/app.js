@@ -234,6 +234,54 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
 - Incomplete sections or empty placeholders.
 `;
 
+    // README-HvAOS.md
+    templates["README-HvAOS.md"] = `# HvAOS (Human vs AI OS) — 人机协作与意图对齐操作系统使用指南
+
+> **HvAOS** 是一个极简、 domain-neutral（领域无关）的 AI 协同协议与规则模板系统。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 运行网关（Gatekeeper），通过 5 层架构牢牢守住任何项目的执行质量与合规红线，防止 AI 脱缰或生成无效产出。
+
+---
+
+## 👨‍💻 人类（您）使用说明
+
+1. **启动**：在您的 AI 工具（如 Cursor、Claude Code、Gemini CLI 等）中，向 AI 发送以下指令：
+   > “请读取项目里的 \`README-HvAOS.md\` 文件，并执行其中的【AI 智能启动与初始化协议】。”
+2. **回答**：AI 会自动读取本系统卡片，为您整理出一份极简的定制问题。您只需简单回答，AI 就会自动补齐所有场景占位符并激活规则卡片！
+
+---
+
+## 🤖 AI Bootloader Protocol (AI 智能启动与初始化协议)
+
+> [!IMPORTANT]
+> **AI 助手请注意：当你收到人类要求初始化本协议的指令时，你必须严格按照以下步骤执行：**
+
+### 1. 扫描与分析阶段
+1. 依次读取同级目录下的 5 个文档：
+   - \`01-intent.md\`（意图层）
+   - \`02-rules.md\`（规则层）
+   - \`03-processes.md\`（流程层）
+   - \`04-context.md\`（上下文层）
+   - \`05-acceptance.md\`（验收层）
+2. 识别出这些文档中所有的 \`{{PLACEHOLDERS}}\`（双大括号包裹的占位符）以及注释中提示需要补充的空白字段。
+
+### 2. 问卷整理与交互阶段
+1. 在对话中，向人类输出一份**极简、友好且结构化**的提问清单。
+2. **提问原则**：
+   - 每次提问数量控制在 5 个以内，避免让人类感到疲劳。
+   - 尽量提供**多选题 (Recommended)** 或 **简答题** 的形式，降低人类的输入成本。
+   - **核心问题**：询问当前项目是属于 **【自媒体运营/内容生产】**、**【个人生活/助理管理】** 还是 **【软件开发】**，以便激活对应的规则插槽。
+
+### 3. 文档自动填充与芯片装载阶段
+1. 获得人类的回答后，自动用真实内容替换 5 个 Markdown 文档中的占位符，保存文件。
+2. **装载规则芯片 (.mdc)**：
+   - 将 \`.hvaos/\` 目录下对应的 5 个规则卡片（如 \`01-intent.mdc\`）用人类的回答替换卡片中的占位符。
+   - **如果项目涉及代码开发或需要激活 IDE 规则拦截机制**，在终端中执行以下符号链接指令，为 IDE（如 Cursor 等）激活规则卡片：
+     \`\`\`bash
+     mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
+     \`\`\`
+3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活 of 5 层规则与运行命令。
+`;
+
     // Build matching .mdc files
     const mdFiles = ["01-intent", "02-rules", "03-processes", "04-context", "05-acceptance"];
     mdFiles.forEach(f => {

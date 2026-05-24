@@ -104,6 +104,13 @@ Please align all operations with the definitions located in the root-level ${fil
 EOF
 done
 
+# Download and generate README-HvAOS.md instruction file
+echo -e "📥 正在下载 ${CYAN}README-HvAOS.md${NC} 使用说明书并配置引导协议..."
+TEMP_README=$(mktemp)
+curl -s "${RAW_BASE_URL}/README-HvAOS.md" > "$TEMP_README"
+mv "$TEMP_README" "README-HvAOS.md"
+
+
 # Perform IDE rules symbolic link setup (e.g. for Cursor)
 echo -e "\n🔗 正在与 IDE 建立芯片关联通道 (Linking to .cursor/rules)..."
 mkdir -p .cursor
