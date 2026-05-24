@@ -6,6 +6,11 @@ This document tracks the active publishing channels, demographic targets, style 
 
 ## 1. Distribution Channels & Targets
 
+
+> [!IMPORTANT]
+> **Local Environment Variable Isolation**: Never hardcode local file paths, credentials, tokens, or local machine-specific configurations inside this file. When defining environmental differences, use env variables (e.g. `DB_URL=env.DB_URL`) and load the real value from a local `.env` file to prevent exposing sensitive keys or causing Git merge conflicts for the team.
+
+
 *   **Active Platforms**: `WeChat Official Account (Markdown-based layout), Dev.to, and Medium.`
 *   **Target Demographics**: `Developers, junior engineers, tech leads, and technical product managers.`
 *   **Preferred Layout Tooling**: `mdnice (for WeChat styling) using the dark-mode/neon code template.`

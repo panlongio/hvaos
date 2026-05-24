@@ -142,6 +142,7 @@ This document establishes the strict redlines and constraints for the ${projectN
 - **Spec Gate Protocol**: AI must present a detailed implementation plan and receive explicit approval from the user before executing substantial modifications.
 - **Decision Recommendation**: AI must recommend the optimal solution and explain why, rather than offering a simple list of options.
 - **Surgical Execution**: Follow the least modification principle. Only modify lines directly relevant to the current task.
+- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update \`01-intent.md\` and \`04-context.md\`. To prevent rule bloat, when updating \`04-context.md\`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (\`02-rules.md\`) without explicit human approval via the Spec Gate.
 
 ---
 
@@ -166,7 +167,7 @@ This document outlines the standard lifecycle. The AI assistant must follow thes
 3. **Spec Gate Approval**: Wait for the user to reply with "consent" or "continue".
 4. **Surgical Execution**: Perform minimal modifications, updating task.md.
 5. **Quality Verification**: Verify code, run linters, or check copywriting structures.
-6. **Delivery Walkthrough**: Document the exact changes and validation outcomes.
+6. **Delivery Walkthrough & Self-Evolution**: Document the exact changes. If the task involved a tech stack migration, dependency shift, or new retrospective warning, the primary AI must automatically update and prune \`04-context.md\` to keep the documentation aligned.
 
 ---
 
@@ -175,6 +176,14 @@ This document outlines the standard lifecycle. The AI assistant must follow thes
 - **Cleanup**: Delete mock data, temporary files, and caching logs before staging.
 - **Check**: Perform a final compile or readability test.
 - **Release**: Sync to production or target channels.
+
+---
+
+## 3. AI Engine Operations (AI 助理运行规范)
+
+- **Multi-Agent Concurrency Lock**: In a multi-agent environment, only the primary Orchestrator Agent has write permissions to modify the 5-layer files in \`.hvaos\` (or root directory). Subagents must operate in read-only mode to prevent write conflicts and inconsistent updates.
+- **Walkthrough, Delivery & Self-Evolution**: During the task delivery/walkthrough phase, if the task involved a tech stack migration, dependency shift, or new retrospective warning, the primary AI must automatically update and prune \`04-context.md\` (warnings list capped at 5 items) to keep the documentation aligned.
+- **Periodic Memory Heartbeat**: If the chat conversation exceeds 10 turns, the AI must prepend a bold, 1-line recap of active constraints (e.g. \`[Active Redline: Spec Gate Approval Required]\`) at the top of subsequent responses to refocus the LLM's attention in long contexts.
 `;
 
     // 04-context.md
@@ -185,6 +194,9 @@ This document tracks active tools, technical debts, and past experiments.
 ---
 
 ## 1. Active Tools & Setup
+
+> [!IMPORTANT]
+> **Local Environment Variable Isolation**: Never hardcode local file paths, credentials, tokens, or local machine-specific configurations inside this file. When defining environmental differences, use env variables (e.g. \`DB_URL=env.DB_URL\`) and load the real value from a local \`.env\` file to prevent exposing sensitive keys or causing Git merge conflicts for the team.
 
 *   **Project Environment**: \`${presetKey === 'coding' ? 'Software development environment' : presetKey === 'media' ? 'Technical copywriting editor' : 'Life planner tracker'}\`
 *   **Host Platform**: \`Local system / active git repository\`
@@ -203,6 +215,7 @@ This document tracks active tools, technical debts, and past experiments.
 *   **Warning 1**: Avoid automated bulk generation without granular human outlines, which leads to structural distortion.
 *   **Warning 2**: Do not ignore buffer periods between sequential task batches.
 `;
+
 
     // 05-acceptance.md
     templates["05-acceptance.md"] = `# 05 - Acceptance Document (Quality Gates & UX Standards)
@@ -235,10 +248,10 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
 `;
 
     // README-HvAOS.md
-    templates["README-HvAOS.md"] = `# HvAOS (Human vs AI OS) — 人机协作与意图对齐操作系统使用指南
+    templates["README-HvAOS.md"] = `# HvAOS (Human vs AI OS) — 人机协作与意图对齐网关使用指南
 
-> **HvAOS** 是一个极简、 domain-neutral（领域无关）的 AI 协同协议与规则模板系统。
-> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 运行网关（Gatekeeper），通过 5 层架构牢牢守住任何项目的执行质量与合规红线，防止 AI 脱缰或生成无效产出。
+> **HvAOS** 是一个极简、领域无关的 AI 协同协议与规则自演进系统。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它通过 5 层物理架构与自演进设计，解决 AI 协作中的**规则负债 (Rule Debt)**、**注意力稀释 (Attention Dilution)** 与**维护惰性 (Maintenance Inertia)** 痛点，实现开箱即用的自动化意图对齐与规则装载。
 
 ---
 
@@ -280,7 +293,8 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
      \`\`\`bash
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      \`\`\`
-3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活 of 5 层规则与运行命令。
+   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境下（如 Claude Code）**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions 读入当前 Session，保持 100% 规则对齐。
+3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活的 5 层规则与运行命令。
 `;
 
     // Build matching .mdc files
@@ -291,6 +305,8 @@ description: Rule alignment for ${f} in ${projectName}
 globs: *
 ---
 # ${f.toUpperCase()} MDC chip
+
+🚨 [STRICT INTERCEPTION] If any unresolved double-brace placeholders like "{{PLACEHOLDER}}" exist in your active hvaos rules files (01-intent.md, 02-rules.md, etc.), you are strictly FORBIDDEN from writing any code or making file modifications. Your ONLY permitted action is to guide the user to complete the Bootloader initialization in the chat.
 
 ${templates[`${f}.md`].substring(0, 300)}... (Refers to root level ${f}.md for complete rules)`;
     });

@@ -39,3 +39,16 @@ If an article is published with errors (e.g., a broken link, a critical code bug
 1.  **Immediate Soft Rollback**: Update the post immediately if the platform permits live edits. If it's a major compliance issue, pull the article to "Draft/Private" mode.
 2.  **Correction Logging**: Pin a comment clarifying the correction (e.g., "Fix in line 12 of the code sample") to minimize confusion.
 3.  **Post-mortem Update**: Update the reference documentation and local knowledge base to ensure the error is not repeated in future drafts.
+
+---
+
+## 4. AI Engine Operations (AI 助理运行规范)
+
+### 🟢 Multi-Agent Concurrency Lock
+In a multi-agent environment, only the primary Orchestrator Agent has write permissions to modify the 5-layer files in `.hvaos` (or root directory). Subagents must operate in read-only mode to prevent write conflicts and inconsistent updates.
+
+### 🟢 Walkthrough, Delivery & Self-Evolution
+During the task delivery/walkthrough phase, if the task involved a tech stack migration, dependency shift, or new retrospective warning, the primary AI must automatically update and prune `04-context.md` (warnings list capped at 5 items) to keep the documentation aligned.
+
+### 🟢 Periodic Memory Heartbeat
+If the chat conversation exceeds 10 turns, the AI must prepend a bold, 1-line recap of active constraints (e.g. `[Active Redline: Spec Gate Approval Required]`) at the top of subsequent responses to refocus the LLM's attention in long contexts.

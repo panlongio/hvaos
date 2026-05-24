@@ -6,6 +6,8 @@ This document establishes the strict editorial constraints and compliance bounda
 
 ## 1. Universal Redlines
 
+- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update `01-intent.md` and `04-context.md`. To prevent rule bloat, when updating `04-context.md`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (`02-rules.md`) without explicit human approval via the Spec Gate.
+
 - **Structure First (大纲先行)**: Before writing the complete draft of any article or script, the AI assistant MUST submit a detailed structure outline (including hook, section headings, core arguments, and CTA) in the chat and receive explicit human approval.
 - **Decision Recommendation (决策推荐)**: When choosing between different angles (e.g., beginner-friendly vs. deep-dive) or hook styles, the AI must recommend the optimal choice based on current audience data and state the reason.
 - **Copyright & Plagiarism Guard (版权红线)**: Absolutely no scraping or copying of copyrighted materials. When referencing external case studies, code examples, or quotes, always credit the original author.

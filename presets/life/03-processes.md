@@ -37,3 +37,16 @@ When schedule conflicts arise (e.g., flight delays, sudden meetings, double book
 1.  **Automated Rescheduling**: If a conflict occurs, immediately identify the lowest priority task block and move it to a free slot later in the week. Protect sleep and exercise blocks.
 2.  **Budget Compensation**: If the monthly budget is breached, calculate the deficit. Apply an immediate spending freeze on discretionary categories for the subsequent week to restore balance.
 3.  **Review and Readjust**: Analyze the cause of the schedule drift or budget breach. Adjust the next week's allocation rules to prevent recurrence.
+
+---
+
+## 4. AI Engine Operations (AI 助理运行规范)
+
+### 🟢 Multi-Agent Concurrency Lock
+In a multi-agent environment, only the primary Orchestrator Agent has write permissions to modify the 5-layer files in `.hvaos` (or root directory). Subagents must operate in read-only mode to prevent write conflicts and inconsistent updates.
+
+### 🟢 Walkthrough, Delivery & Self-Evolution
+During the task delivery/walkthrough phase, if the task involved a tech stack migration, dependency shift, or new retrospective warning, the primary AI must automatically update and prune `04-context.md` (warnings list capped at 5 items) to keep the documentation aligned.
+
+### 🟢 Periodic Memory Heartbeat
+If the chat conversation exceeds 10 turns, the AI must prepend a bold, 1-line recap of active constraints (e.g. `[Active Redline: Spec Gate Approval Required]`) at the top of subsequent responses to refocus the LLM's attention in long contexts.

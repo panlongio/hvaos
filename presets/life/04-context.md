@@ -6,6 +6,11 @@ This document tracks active tools, daily habits, financial baselines, and past l
 
 ## 1. Setup & Active Applications
 
+
+> [!IMPORTANT]
+> **Local Environment Variable Isolation**: Never hardcode local file paths, credentials, tokens, or local machine-specific configurations inside this file. When defining environmental differences, use env variables (e.g. `DB_URL=env.DB_URL`) and load the real value from a local `.env` file to prevent exposing sensitive keys or causing Git merge conflicts for the team.
+
+
 *   **Calendar Tool**: `Google Calendar (synced across Mobile and Desktop) with time-blocking.`
 *   **Finance Tracking**: `Ynab (You Need A Budget) for monthly envelope budgeting / local CSV ledger.`
 *   **Fitness Tracking**: `Apple Health (synced via smartwatch to track daily active energy and steps).`

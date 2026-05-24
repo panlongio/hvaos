@@ -1,9 +1,9 @@
-# HvAOS (Human vs AI OS) — 人机协作与意图对齐操作系统使用指南
+# HvAOS (Human vs AI OS) — 人机协作与意图对齐网关使用指南
 
 > [!NOTE]
-> **HvAOS** 是一个极简、 domain-neutral（领域无关）的 AI 协同协议与规则模板系统。
-> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 运行网关（Gatekeeper），通过 5 层架构牢牢守住任何项目的执行质量与合规红线，防止 AI 脱缰或生成无效产出。
-> 无论您是进行**软件开发**、**自媒体写稿**、**商业分析**还是**个人生活管理**，HvAOS 均能实现开箱即用的自动化规则装载。
+> **HvAOS** 是一个极简、领域无关的 AI 协同协议与规则自演进系统。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它通过 5 层物理架构与自演进设计，解决 AI 协作中的**规则负债 (Rule Debt)**、**注意力稀释 (Attention Dilution)** 与**维护惰性 (Maintenance Inertia)** 痛点，实现开箱即用的自动化意图对齐与规则装载。
+
 
 ---
 
@@ -45,4 +45,6 @@
      ```bash
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      ```
+   - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境下（如 Claude Code）**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions 读入当前 Session，保持 100% 规则对齐。
+
 3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活的 5 层规则与运行命令。

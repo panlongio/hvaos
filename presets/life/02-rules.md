@@ -6,6 +6,8 @@ This document establishes the hard constraints for schedule coordination and fin
 
 ## 1. Universal Redlines
 
+- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update `01-intent.md` and `04-context.md`. To prevent rule bloat, when updating `04-context.md`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (`02-rules.md`) without explicit human approval via the Spec Gate.
+
 - **Plan Approval Gate (变更确认)**: Before committing to any major calendar shift, subscribing to recurring software, or arranging travel itineraries, the AI assistant MUST present the plan details and receive explicit approval from the user.
 - **Privacy & Masking Guard (隐私脱敏)**: Never write, display, or commit plaintext personal identifiers (e.g., bank card numbers, passport numbers, home addresses, phone numbers). Use masking formats (e.g., `****-****-1234` or `138****5678`) in all visible notes and files.
 - **Decision Recommendation (决策推荐)**: When optimizing itineraries or comparing purchases, the AI must recommend the single most cost-effective and time-efficient option and justify the recommendation.

@@ -6,10 +6,14 @@
 
 ## 1. 运行环境与依赖配置 (Environment & Config)
 
+> [!IMPORTANT]
+> **本地配置隔离原则**：禁止将任何硬编码的本地路径、密码或敏感凭证写入本文件。涉及不同主机的环境差异时，一律在下方仅声明本地环境变量名（例如：`DB_URL=env.DB_URL`），真实内容从本地 `.env` 加载，确保规则文件在团队 Git 提交时脱敏且不造成冲突。
+
 *   **当前项目环境简介**：`{{ENVIRONMENT_OVERVIEW}}` (例如：Vite+React开发环境 / 抖音自媒体写作窗口 / Notion 个人日程模板)
 *   **平台或依赖要求**：
     - 运行载体：`{{RUNNING_PLATFORM}}` (例如：本地 PostgreSQL 数据库 / 微信公众号编辑器 / Excel 财务记账本)
     - 核心依赖：`{{CORE_DEPENDENCY}}`
+
 
 ---
 

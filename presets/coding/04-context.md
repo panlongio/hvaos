@@ -6,6 +6,11 @@ This document serves as the persistent memory of the codebase, tracking dependen
 
 ## 1. Runtime Environment & Dependencies
 
+
+> [!IMPORTANT]
+> **Local Environment Variable Isolation**: Never hardcode local file paths, credentials, tokens, or local machine-specific configurations inside this file. When defining environmental differences, use env variables (e.g. `DB_URL=env.DB_URL`) and load the real value from a local `.env` file to prevent exposing sensitive keys or causing Git merge conflicts for the team.
+
+
 *   **Project Environment**: `Vite + React SPA development environment with ESLint & Prettier.`
 *   **Running Platform**: `Cloudflare Pages (Static Assets) & Cloudflare Workers (API Layer). Node.js v20.x for local builds.`
 *   **Core Dependencies**:

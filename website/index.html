@@ -193,7 +193,90 @@
         </div>
     </section>
 
+    <!-- Philosophy & Comparison Section -->
+    <section class="philosophy" id="philosophy">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge badge-neon">设计哲学 (Philosophy)</span>
+                <h2 class="section-title">拒绝“规则负债”与“注意力稀释”</h2>
+                <p class="section-subtitle">
+                    像传统自动堆叠或无限生成技能的方案，在运行一段时间后会由于规则累加导致严重的规则负债与语义碰撞。HvAOS 采用“5层物理收敛与自演进”架构，让规则始终保持最高内聚、零冗余。
+                </p>
+            </div>
+            
+            <div class="philosophy-grid">
+                <div class="pain-point-card">
+                    <div class="pain-badge pain-red">痛点 (Pain Point 01)</div>
+                    <h3>规则负债 (Rule Debt)</h3>
+                    <p>AI 不断自动堆叠并写入新的技能规范，导致规则库无休止膨胀。久而久之，陈旧的协议、冗余的代码规约成为沉重的技术债，无论人类还是 AI 都失去阅读和梳理的能力。</p>
+                </div>
+                
+                <div class="pain-point-card">
+                    <div class="pain-badge pain-orange">痛点 (Pain Point 02)</div>
+                    <h3>注意力稀释与语义冲突</h3>
+                    <p>当规则分散在海量文件或无结构长文本中时，大模型在长对话时极易出现检索偏差。相似的规则之间发生指令冲突与逻辑碰撞，导致 AI 注意力涣散、陷入幻觉或胡说八道。</p>
+                </div>
+
+                <div class="pain-point-card">
+                    <div class="pain-badge pain-green">HvAOS 解法 (The Solution)</div>
+                    <h3>五层收敛与自演进</h3>
+                    <p>无论项目多复杂，HvAOS 永远只维护 5 张高内聚卡片。AI 在交付时自动在后台维护与剪枝（上限 5 条），杜绝多规则匹配重叠。既解决了人肉维护惰性，又防止大模型因窗口过长而失忆变笨。</p>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="comparison-container">
+                <h3 class="table-title"><i class="fa-solid fa-scale-balanced"></i> 架构方案深度对比</h3>
+                <div class="table-responsive">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>对比维度</th>
+                                <th class="highlight-col">HvAOS (人机协作网关)</th>
+                                <th>传统自动堆叠方案</th>
+                                <th>传统无结构 Prompt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="dim-name">规则生命周期与负债</td>
+                                <td class="highlight-val"><strong>永远收敛为 5 层卡片</strong><br>对规则进行存量修剪与覆写，零规则冗余，零累积负债</td>
+                                <td><strong>文件数量无限累加</strong><br>技能越积越多，最终形成庞大而混乱的文档垃圾堆</td>
+                                <td><strong>单文件臃肿或多文件杂乱</strong><br>规则难以模块化，过长则大模型直接选择性忽视</td>
+                            </tr>
+                            <tr>
+                                <td class="dim-name">语义冲突与幻觉控制</td>
+                                <td class="highlight-val"><strong>极低</strong><br>5层图层物理隔离，结合 MDC 芯片，实现精确的文件路径拦截与挂载</td>
+                                <td><strong>高</strong><br>大量规则之间发生重叠或冲突，引起大模型指令混淆，造成决策失准</td>
+                                <td><strong>中到高</strong><br>无结构的 Prompt 极易导致模型在长上下文中产生注意力涣散和幻觉</td>
+                            </tr>
+                            <tr>
+                                <td class="dim-name">维护成本与时效性</td>
+                                <td class="highlight-val"><strong>AI 交付时自动演进 + 剪枝</strong><br>免去人肉维护痛苦，零维护门槛，防范老旧规则陈旧失效</td>
+                                <td><strong>无需人类维护，但内容不可控</strong><br>AI 自主提炼的步骤容易出错，缺乏人类主动对齐和确认机制</td>
+                                <td><strong>完全依赖人类手动重构</strong><br>一旦项目技术栈重构，规则迅速过时，需要花费精力重写</td>
+                            </tr>
+                            <tr>
+                                <td class="dim-name">大模型适配度<br>(Qwen, Kimi, MiniMax等)</td>
+                                <td class="highlight-val"><strong>深度优化</strong><br>专为长上下文和推理模型剪枝，节省 90% 的 Token 上下文税</td>
+                                <td><strong>限制较多</strong><br>强依赖特定的开源微调基座，在通用商业大模型上容易导致推理脱轨</td>
+                                <td><strong>通用，但极易被淹没</strong><br>随着对话历史拉长，传统指令极易被长上下文淹没而失效</td>
+                            </tr>
+                            <tr>
+                                <td class="dim-name">智能体越权防线</td>
+                                <td class="highlight-val"><strong>严格的权限边界</strong><br>AI 仅自动演进上下文/警告，意图与红线修改必须通过 Spec Gate 人类显式审批</td>
+                                <td><strong>无物理边界</strong><br>AI 在后台拥有绝对的规则自改写权限，容易出现绕过红线行为</td>
+                                <td><strong>无边界</strong><br>大模型没有明确的自维护边界，随时可能修改或忽视红线约束</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Visual Generator Section -->
+
     <section class="generator" id="generator">
         <div class="container">
             <div class="section-header">

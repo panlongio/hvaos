@@ -6,6 +6,8 @@ This document establishes the strict redlines for code modifications and executi
 
 ## 1. Universal Redlines
 
+- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update `01-intent.md` and `04-context.md`. To prevent rule bloat, when updating `04-context.md`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (`02-rules.md`) without explicit human approval via the Spec Gate.
+
 - **Spec Gate Protocol (方案先行)**: Before making any non-trivial modifications to the codebase (such as editing files, introducing dependencies, or altering core architecture), the AI assistant MUST present a detailed implementation plan in the chat and receive explicit approval ("approved", "continue", "同意") from the human.
 - **Decision Recommendation (决策推荐)**: When multiple architectural paths or library choices are available, the AI must explicitly recommend the optimal solution and detail the rationale. Simply listing options for the user to select is strictly forbidden.
 - **Credential & Secret Protection (凭证安全)**: Never hardcode api keys, database credentials, passwords, or private configurations in any source file. All credentials must be loaded via environment variables (`process.env`) and defined in a `.env.example` file.
