@@ -111,14 +111,72 @@ curl -s "${RAW_BASE_URL}/README-HvAOS.md" > "$TEMP_README"
 mv "$TEMP_README" "README-HvAOS.md"
 
 
-# Perform IDE rules symbolic link setup (e.g. for Cursor)
-echo -e "\n🔗 正在与 IDE 建立芯片关联通道 (Linking to .cursor/rules)..."
-mkdir -p .cursor
-ln -sf ../.hvaos .cursor/rules
+# Auto-detect IDE environment from parent processes
+DETECTED_IDE=""
+PARENT_PID=$$
+
+for i in {1..10}; do
+    PARENT_PID=$(ps -p "$PARENT_PID" -o ppid= 2>/dev/null | tr -d ' ')
+    if [ -z "$PARENT_PID" ] || [ "$PARENT_PID" -eq 1 ] || [ "$PARENT_PID" -eq 0 ]; then
+        break
+    fi
+    PROC_PATH=$(ps -p "$PARENT_PID" -o comm= 2>/dev/null)
+    PROC_NAME=$(basename "$PROC_PATH" 2>/dev/null)
+    
+    if [[ "$PROC_NAME" =~ [Cc]ursor ]]; then
+        DETECTED_IDE="cursor"
+        break
+    elif [[ "$PROC_NAME" =~ [Tt]rae ]]; then
+        DETECTED_IDE="trae"
+        break
+    elif [[ "$PROC_NAME" =~ [Ww]indsurf ]]; then
+        DETECTED_IDE="windsurf"
+        break
+    elif [[ "$PROC_NAME" =~ [Cc]ode ]]; then
+        # Standard VS Code (used by extensions like Cline/Roo Code)
+        DETECTED_IDE="cursor"
+        break
+    fi
+done
+
+# Fallback check using environment variables
+if [ -z "$DETECTED_IDE" ]; then
+    if [ "$TERM_PROGRAM" = "vscode" ] || [ -n "$VSCODE_GIT_IPC_HANDLE" ]; then
+        DETECTED_IDE="cursor"
+    fi
+fi
+
+LINK_INFO=""
+case $DETECTED_IDE in
+    "cursor")
+        echo -e "\n🔗 检测到 Cursor/VSCode 环境，正在建立芯片关联通道 (Linking to .cursor/rules)..."
+        mkdir -p .cursor
+        ln -sf ../.hvaos .cursor/rules
+        LINK_INFO="、\`.cursor/rules\` 软链接芯片"
+        ;;
+    "trae")
+        echo -e "\n🔗 检测到 Trae 环境，正在建立芯片关联通道 (Linking to .trae/rules)..."
+        mkdir -p .trae
+        ln -sf ../.hvaos .trae/rules
+        LINK_INFO="、\`.trae/rules\` 软链接芯片"
+        ;;
+    "windsurf")
+        echo -e "\n🔗 检测到 Windsurf 环境，正在建立芯片关联通道 (Linking to .windsurf/rules)..."
+        mkdir -p .windsurf
+        ln -sf ../.hvaos .windsurf/rules
+        LINK_INFO="、\`.windsurf/rules\` 软链接芯片"
+        ;;
+    *)
+        echo -e "\nℹ️ 未检测到特定 IDE 运行态（如为 OpenClaw, Hermes, Claude Code 等 CLI/Agent），已跳过 IDE 软链接创建，保持目录纯净。"
+        LINK_INFO=""
+        ;;
+esac
 
 # Success Declaration
 echo -e "\n${GREEN}✨ [SUCCESS] HvAOS 规则芯片已全部装载完成！${NC}"
-echo -e "💡 已经自动在当前项目根目录下生成了 5 层规则文档及 \`.hvaos/\` 核心规则目录。"
-echo -e "🔗 已为 Cursor 等 IDE 自动创建了 \`.cursor/rules\` 指向 \`.hvaos/\` 的软链接。"
-echo -e "🤖 下次您在此项目唤醒 AI 助手时，规则将强制拦截生效。"
+echo -e "💡 已经自动在当前项目根目录下生成了 5 层规则文档、\`.hvaos/\` 核心规则目录以及 \`README-HvAOS.md\` 说明书${LINK_INFO}。"
 echo -e "-------------------------------------------------------------"
+echo -e "\n📢 [AI ASSISTANT ACTION REQUIRED] 🚀"
+echo -e "请 AI 助手立即读取项目根目录下的 \`README-HvAOS.md\` 文件，并执行其中的【AI 智能启动与初始化协议】，自动启动与人类的问答交互！"
+echo -e "-------------------------------------------------------------"
+
