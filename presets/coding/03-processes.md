@@ -1,54 +1,31 @@
-# 03 - Processes Document (Workflows & Pipelines)
+# 03 - 流程文档：怎么做 (Processes)
 
-This document defines the standard workflows for coding tasks. The AI assistant must strictly follow these step-by-step processes to ensure repeatable, reliable, and high-quality deliveries.
+## 1. 最小闭环（默认）
 
----
+1. 意图确认：复述目标、边界、成功标准。
+2. 方案提交：列出修改点、风险、验证命令。
+3. 审批执行：获“同意/继续”后执行。
+4. 验证交付：运行验收命令并给结果。
 
-## 1. Task Development Pipeline (6-Step Cycle)
+## 2. 完整闭环（复杂任务）
 
-```mermaid
-graph TD
-    A[1. Requirement Analysis] --> B[2. Technical Design]
-    B --> C[3. Spec Approval Gate]
-    C --> D[4. Surgical Implementation]
-    D --> E[5. Regression & Quality Gate]
-    E --> F[6. Walkthrough & Delivery]
-```
+1. 需求分析
+2. 技术方案
+3. 人类审批
+4. 执行变更
+5. 回归验证
+6. 交付与复盘
 
-1.  **Requirement Analysis**: Carefully parse user requirements, inspect open files, and query relevant symbols in the codebase to understand the context.
-2.  **Technical Design**: Before changing any files, draft an implementation plan detailing the modified files, dependency additions, test plans, and potential side-effects.
-3.  **Spec Approval Gate**: Present the plan to the user. Stop execution and wait for the user to explicitly approve or provide feedback.
-4.  **Surgical Implementation**: Perform the minimal necessary code changes while keeping a detailed `task.md` checklist updated.
-5.  **Regression & Quality Gate**: Verify modifications against existing code. Run build commands, linter checks, and test suites. Ensure no previous functionality is broken.
-6.  **Walkthrough & Delivery**: Document the exact changes, the tests run, and the outcomes. Provide a clean `walkthrough.md` file including execution logs or visual evidence of the result.
+## 3. 每步产出物
 
----
+- 方案阶段：`implementation-plan`
+- 执行阶段：`change-summary`
+- 验证阶段：`verification-log`
+- 交付阶段：`walkthrough.md`（如项目需要）
 
-## 2. Release & Deployment Pipeline
+## 4. 发布与回滚
 
-Before releasing a build or merging a pull request to the production branch, execute the following gate check:
-*   **Workspace Cleanup**: Run clean scripts to delete temporary files, mock logs, build caches, and local configuration overrides (e.g., `npm run clean` or removing temp build artifacts).
-*   **Pre-flight Verification**: Run the full compilation checks and test suite (`npm run lint && npm run test && npm run build`) to ensure the build compiles successfully.
-*   **Automated Deployment**: Execute the authorized deployment script (e.g., deploying to staging/production via `wrangler pages deploy` or CI pipeline triggers).
-
----
-
-## 3. Rollback & Recovery Plan
-
-When a deployment fails or a production incident is detected, follow these steps in rapid sequence:
-1.  **Immediate Reversion**: Revert the main branch to the last known stable commit (e.g., `git revert` or restoring Cloudflare Pages deployment to the previous successful build).
-2.  **Local Reproduction**: Check logs to isolate the root cause. Set up a local test environment to reproduce the bug without modifying production.
-3.  **Redeliver with Fix**: Submit a new patch with a regression test case added to the suite to prevent future occurrences.
-
----
-
-## 4. AI Engine Operations (AI 助理运行规范)
-
-### 🟢 Multi-Agent Concurrency Lock
-In a multi-agent environment, only the primary Orchestrator Agent has write permissions to modify the 5-layer files in `.hvaos` (or root directory). Subagents must operate in read-only mode to prevent write conflicts and inconsistent updates.
-
-### 🟢 Walkthrough, Delivery & Self-Evolution
-During the task delivery/walkthrough phase, if the task involved a tech stack migration, dependency shift, or new retrospective warning, the primary AI must automatically update and prune `04-context.md` (warnings list capped at 5 items) to keep the documentation aligned.
-
-### 🟢 Periodic Memory Heartbeat
-If the chat conversation exceeds 10 turns, the AI must prepend a bold, 1-line recap of active constraints (e.g. `[Active Redline: Spec Gate Approval Required]`) at the top of subsequent responses to refocus the LLM's attention in long contexts.
+- 前置清理：`清理临时文件与调试残留`
+- 质量预检：`执行静态检查与回归测试`
+- 发布执行：`按发布脚本或流程执行`
+- 回滚步骤：`回退到上一稳定版本` -> `定位根因并补充验证` -> `修复后重新发布`

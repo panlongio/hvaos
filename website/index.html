@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HvAos — Human vs AI OS | 人机协作与意图对齐网关</title>
-    <meta name="description" content="HvAos (Human vs AI OS) 是一个领域无关的 5 层规则协议系统。它充当您的 AI 运行网关（Gatekeeper），通过意图、规则、流程、上下文及验收 5 层控制，牢牢守住任何项目的执行质量与合规红线，防止 AI 失控或生成废话。">
-    <meta name="keywords" content="HvAos, Human vs AI OS, AI协作协议, AI规则网关, IDERules, Agentic, PromptEngineering">
+    <title>HvAOS — Human vs AI OS | 人机协作与意图对齐网关</title>
+    <meta name="description" content="HvAOS (Human vs AI OS) 是一个领域无关的 5 层规则协议系统。它充当您的 AI 运行网关（Gatekeeper），通过意图、规则、流程、上下文及验收 5 层控制，牢牢守住任何项目的执行质量与合规红线，防止 AI 失控或生成废话。">
+    <meta name="keywords" content="HvAOS, Human vs AI OS, AI协作协议, AI规则网关, IDERules, Agentic, PromptEngineering">
     <meta name="author" content="panlongio">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,10 +27,10 @@
                 <span class="logo-text">HvA<span>os</span></span>
             </a>
             <nav class="nav-links">
-                <a href="#features">架构设计</a>
-                <a href="#sandbox">预设沙盒</a>
+                <a href="#quickstart">3分钟上手</a>
+                <a href="#status">验证状态</a>
+                <a href="#troubleshoot">故障排查</a>
                 <a href="#generator">规则生成器</a>
-                <a href="#bootloader">启动引导</a>
                 <a href="https://github.com/panlongio/hvaos" target="_blank" class="nav-github-btn">
                     <i class="fa-brands fa-github"></i> Star on GitHub
                 </a>
@@ -43,10 +43,10 @@
 
     <!-- Mobile Nav Menu -->
     <div class="mobile-menu" id="mobile-menu">
-        <a href="#features">架构设计</a>
-        <a href="#sandbox">预设沙盒</a>
+        <a href="#quickstart">3分钟上手</a>
+        <a href="#status">验证状态</a>
+        <a href="#troubleshoot">故障排查</a>
         <a href="#generator">规则生成器</a>
-        <a href="#bootloader">启动引导</a>
         <a href="https://github.com/panlongio/hvaos" target="_blank" class="mobile-github-btn">
             <i class="fa-brands fa-github"></i> GitHub
         </a>
@@ -59,19 +59,19 @@
             <div class="hero-content">
                 <div class="hero-badge">
                     <span class="badge-dot"></span>
-                    v1.0.0 Stable
+                    v1.2.0 Stable
                 </div>
                 <h1 class="hero-title">
-                    HvAos：一套<br>
+                    HvAOS：一套<br>
                     <span>以人类意图为主的 AI Agent 驾驭系统</span>
                 </h1>
                 <p class="hero-desc">
                     让人类始终掌握目标、边界与验收权。<br>
-                    <strong>HvAos (Human vs AI OS)</strong> 通过极简的 5 层意图卡片，把 AI 协作从“对话技巧”升级为“可执行、可治理、可复用”的系统能力。
+                    <strong>HvAOS (Human vs AI OS)</strong> 通过极简的 5 层意图卡片，把 AI 协作从“对话技巧”升级为“可执行、可治理、可复用”的系统能力。
                 </p>
                 <div class="hero-actions">
-                    <a href="#bootloader" class="btn btn-primary">
-                        <i class="fa-solid fa-bolt"></i> 立即使用
+                    <a href="#quickstart" class="btn btn-primary">
+                        <i class="fa-solid fa-bolt"></i> 3分钟开始
                     </a>
                     <a href="https://github.com/panlongio/hvaos/blob/main/WHITEPAPER.md" target="_blank" class="btn btn-secondary">
                         <i class="fa-solid fa-book"></i> 技术白皮书
@@ -98,8 +98,60 @@
                     <p class="log info">[INFO] - 04-context (上下文层) loaded.</p>
                     <p class="log info">[INFO] - 05-acceptance (验收层) loaded.</p>
                     <p class="log warning">[WARN] Active Gatekeeper: 02-rules.mdc and 05-acceptance.mdc will enforce strict constraints.</p>
-                    <p class="log success">[SUCCESS] HvAos has been successfully loaded into environment!</p>
+                    <p class="log success">[SUCCESS] HvAOS has been successfully loaded into environment!</p>
                     <p class="cmd"><span class="prompt">$</span> <span class="cursor">_</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quickstart" id="quickstart">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">3 分钟上手：默认成功路径</h2>
+                <p class="section-subtitle">只走这条路径，先跑通再扩展。适合第一次接入 HvAOS。</p>
+            </div>
+            <div class="quickstart-grid">
+                <div class="quick-card">
+                    <div class="quick-step">STEP 1</div>
+                    <h3>安装</h3>
+                    <p>在项目根目录执行默认本地稳定模式。</p>
+                    <code>bash website/install.sh</code>
+                </div>
+                <div class="quick-card">
+                    <div class="quick-step">STEP 2</div>
+                    <h3>初始化</h3>
+                    <p>把这句话发给你的 AI 助手。</p>
+                    <code>请读取 README-HvAOS.md 并执行初始化协议</code>
+                </div>
+                <div class="quick-card">
+                    <div class="quick-step">STEP 3</div>
+                    <h3>验收</h3>
+                    <p>跑门禁命令，确认配置完整。</p>
+                    <code>bash scripts/verify-hvaos.sh</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="status" id="status">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">实时验证状态</h2>
+                <p class="section-subtitle">来自本仓库评测产物 `artifacts/eval-report.json`，用于对外展示可验证证据。</p>
+            </div>
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-label">当前评分</div>
+                    <div class="status-value" id="eval-score">--/--</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-label">最后评测时间</div>
+                    <div class="status-value status-small" id="eval-ended-at">--</div>
+                </div>
+                <div class="status-card">
+                    <div class="status-label">覆盖用例</div>
+                    <div class="status-value status-small" id="eval-cases">coding, media, life</div>
                 </div>
             </div>
         </div>
@@ -157,12 +209,38 @@
         </div>
     </section>
 
+    <section class="troubleshoot" id="troubleshoot">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">常见故障排查</h2>
+                <p class="section-subtitle">安装或验证失败时，先看这里，按顺序排除。</p>
+            </div>
+            <div class="trouble-grid">
+                <div class="trouble-item">
+                    <h4>1) `verify` 报占位符未替换</h4>
+                    <p>说明你在“模板仓库”而不是“已初始化项目”。</p>
+                    <code>bash scripts/verify-hvaos.sh --allow-placeholders .</code>
+                </div>
+                <div class="trouble-item">
+                    <h4>2) 远程模式 404</h4>
+                    <p>目标 ref 可能未包含 `website/checksums.txt`。</p>
+                    <code>bash website/install.sh --remote --ref main</code>
+                </div>
+                <div class="trouble-item">
+                    <h4>3) IDE 未自动挂载规则</h4>
+                    <p>手动建立软链接并重启 IDE。</p>
+                    <code>mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Sandbox Section -->
     <section class="sandbox" id="sandbox">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">实时预设沙盒演练</h2>
-                <p class="section-subtitle">点击下方不同领域的预设标签，查看 HvAos 模板在不用场景下的“自适应规则拦截器”输出内容。</p>
+                <p class="section-subtitle">点击下方不同领域的预设标签，查看 HvAOS 模板在不用场景下的“自适应规则拦截器”输出内容。</p>
             </div>
             
             <div class="sandbox-tabs">
@@ -203,7 +281,7 @@
                 <span class="badge badge-neon">设计哲学 (Philosophy)</span>
                 <h2 class="section-title">拒绝“规则负债”与“注意力稀释”</h2>
                 <p class="section-subtitle">
-                    像传统自动堆叠或无限生成技能的方案，在运行一段时间后会由于规则累加导致严重的规则负债与语义碰撞。HvAos 采用“5层文件级收敛与自演进”架构，让规则始终保持最高内聚、零冗余。
+                    像传统自动堆叠或无限生成技能的方案，在运行一段时间后会由于规则累加导致严重的规则负债与语义碰撞。HvAOS 采用“5层文件级收敛与自演进”架构，让规则始终保持最高内聚、零冗余。
                 </p>
             </div>
             
@@ -221,9 +299,9 @@
                 </div>
 
                 <div class="pain-point-card">
-                    <div class="pain-badge pain-green">HvAos 解法 (The Solution)</div>
+                    <div class="pain-badge pain-green">HvAOS 解法 (The Solution)</div>
                     <h3>五层收敛与自演进</h3>
-                    <p>无论项目多复杂，HvAos 永远只维护 5 张高内聚卡片。AI 在交付时自动在后台维护与剪枝（上限 5 条），杜绝多规则匹配重叠。既解决了人肉维护惰性，又防止大模型因窗口过长而失忆变笨。</p>
+                    <p>无论项目多复杂，HvAOS 永远只维护 5 张高内聚卡片。AI 在交付时自动在后台维护与剪枝（上限 5 条），杜绝多规则匹配重叠。既解决了人肉维护惰性，又防止大模型因窗口过长而失忆变笨。</p>
                 </div>
             </div>
 
@@ -235,7 +313,7 @@
                         <thead>
                             <tr>
                                 <th>对比维度</th>
-                                <th class="highlight-col">HvAos (人机协作网关)</th>
+                                <th class="highlight-col">HvAOS (人机协作网关)</th>
                                 <th>传统自动堆叠方案</th>
                                 <th>传统无结构 Prompt</th>
                             </tr>
@@ -287,7 +365,7 @@
                     <span class="mission-badge">开源使命 & 愿景</span>
                     <h2 class="mission-title">重塑智能体时代的人机协作秩序，<span>沉淀你的个人数字分身</span></h2>
                     <p class="mission-desc">
-                        HvAos 并非一个临时拼接的 Prompt 调试工具。我们致力于通过逻辑解耦和自维护闭环，为全行业提供一套高可靠、低上下文税的通用人机对齐行为规范，并在开发中积攒属于你个人的数字经验资产。
+                        HvAOS 并非一个临时拼接的 Prompt 调试工具。我们致力于通过逻辑解耦和自维护闭环，为全行业提供一套高可靠、低上下文税的通用人机对齐行为规范，并在开发中积攒属于你个人的数字经验资产。
                     </p>
                     
                     <div class="mission-list">
@@ -352,7 +430,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">可视化规则生成器</h2>
-                <p class="section-subtitle">输入您的项目参数，自由勾选规则插件，在本地一键打包并下载专属的 HvAos 系统配置。</p>
+                <p class="section-subtitle">输入您的项目参数，自由勾选规则插件，在本地一键打包并下载专属的 HvAOS 系统配置。</p>
             </div>
             
             <div class="generator-container">
@@ -449,7 +527,7 @@
                                     </li>
                                     <li class="tree-file">
                                         <span class="tree-icon"><i class="fa-regular fa-file-lines"></i></span>
-                                        <span class="tree-name">README-HvAos.md</span>
+                                        <span class="tree-name">README-HvAOS.md</span>
                                     </li>
                                     <li class="tree-file">
                                         <span class="tree-icon"><i class="fa-regular fa-file-lines"></i></span>
@@ -484,7 +562,7 @@
     <section class="bootloader" id="bootloader">
         <div class="container bootloader-container">
             <div class="bootloader-text">
-                <h2 class="section-title">一键唤醒 AI，激活您的 HvAos</h2>
+                <h2 class="section-title">一键唤醒 AI，激活您的 HvAOS</h2>
                 <p class="section-subtitle">
                     解压并将规则文件复制到您的项目根目录中，然后将下方命令行发给 AI 助手（如 Cursor、Claude Code、Gemini 等），它将自动按流程读取并与您交互启动。
                 </p>
@@ -497,7 +575,7 @@
                         </button>
                     </div>
                     <div class="prompt-body">
-                        <p id="prompt-content">请读取项目里的 README-HvAos.md 文件，并执行其中的【AI 智能启动与初始化协议】。</p>
+                        <p id="prompt-content">请读取项目里的 README-HvAOS.md 文件，并执行其中的【AI 智能启动与初始化协议】。</p>
                     </div>
                 </div>
             </div>

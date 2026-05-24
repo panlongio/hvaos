@@ -1,14 +1,19 @@
 ---
-description: Product intent, audience, differentiators, and reverse boundaries.
+description: Intent guardrail card aligned with 01-intent.md.
 globs: *
 alwaysApply: true
 ---
 # 01 - 意图卡片 (Intent)
 
-- **项目名称**：`{{PROJECT_NAME}}`
-- **核心定位与使命**：`{{PROJECT_MISSION}}`
-- **目标用户**：`{{TARGET_AUDIENCE}}`
-- **核心差异点**：`{{DIFFERENTIATORS}}`
-- **反向边界 (不做什么)**：`{{ANTI_GOALS}}`
-- **关联文档**：
-  - 核心愿景与大纲：[01-intent.md](file://./01-intent.md)
+执行任何任务前，先对齐以下要素：
+
+- 项目名称：`{{PROJECT_NAME}}`
+- 核心使命：`{{PROJECT_MISSION}}`
+- 北极星指标：`{{SUCCESS_METRIC_1}}`
+- 目标用户：`{{TARGET_AUDIENCE_1}}`
+- 非目标用户：`{{TARGET_AUDIENCE_2}}`
+- 核心痛点：`{{USER_PAIN_POINT}}`
+- 关键差异点：`{{DIFFERENTIATOR_1}}` / `{{DIFFERENTIATOR_2}}`
+- 明确不做：`{{ANTI_GOAL_1}}` / `{{ANTI_GOAL_2}}`
+
+若任务与上述意图冲突，先停止并请求人类确认。

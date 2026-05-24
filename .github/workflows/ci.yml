@@ -1,0 +1,28 @@
+name: HvAOS CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  verify-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Shell syntax check
+        run: |
+          bash -n website/install.sh
+          bash -n scripts/verify-hvaos.sh
+          bash -n scripts/eval-hvaos.sh
+
+      - name: Verify template repository
+        run: bash scripts/verify-hvaos.sh --allow-placeholders .
+
+      - name: End-to-end evaluation
+        run: bash scripts/eval-hvaos.sh

@@ -1,30 +1,32 @@
-# 02 - Rules Document (Redlines & Constraints)
+# 02 - 规则文档：红线与约束 (Rules)
 
-This document establishes the strict redlines for code modifications and execution behavior. Any codebase changes, configurations, or dependencies violating these rules will be rejected.
+## 1. Blocker（违反即阻断）
 
----
+1. **方案先行**
+- 触发：实质性文件变更/代码编写/大纲重写。
+- 约束：先给可执行方案，获“同意/继续”后执行。
+- 例外：纯只读检查与问答。
+2. **凭证与隐私安全**
+- 触发：涉及密钥、账号、个人信息。
+- 约束：严禁明文提交；敏感信息必须脱敏。
+- 例外：无。
+3. **最小改动原则**
+- 触发：任何修改任务。
+- 约束：只改与任务直接相关的最小范围。
+- 例外：用户明确批准重构。
 
-## 1. Universal Redlines
+## 2. Warning（触发需显式提示）
 
-- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update `01-intent.md` and `04-context.md`. To prevent rule bloat, when updating `04-context.md`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (`02-rules.md`) without explicit human approval via the Spec Gate.
+- **规则膨胀风险**：`04-context.md` 每类最多保留 5 条，超出需合并。
+- **多代理冲突风险**：仅主代理可写 `.hvaos` 规则文件。
 
-- **Spec Gate Protocol (方案先行)**: Before making any non-trivial modifications to the codebase (such as editing files, introducing dependencies, or altering core architecture), the AI assistant MUST present a detailed implementation plan in the chat and receive explicit approval ("approved", "continue", "同意") from the human.
-- **Decision Recommendation (决策推荐)**: When multiple architectural paths or library choices are available, the AI must explicitly recommend the optimal solution and detail the rationale. Simply listing options for the user to select is strictly forbidden.
-- **Credential & Secret Protection (凭证安全)**: Never hardcode api keys, database credentials, passwords, or private configurations in any source file. All credentials must be loaded via environment variables (`process.env`) and defined in a `.env.example` file.
-- **Surgical Code Modification (手术刀修改)**: Follow the principle of least modification. Only modify lines directly relevant to the current task. Do not reformat unrelated files or introduce massive refactorings unless specifically authorized.
+## 3. Advice（最佳实践建议）
 
----
+- 面临多方案时，必须给推荐方案和理由。
+- 可复用步骤优先脚本化，减少手工重复。
 
-## 2. Software Engineering Rules
+## 4. 场景规则插槽
 
-### 💻 Language & Type Systems
-*   **Strict Typing**: Always use strict TypeScript configuration. The use of `any`, `ts-ignore`, or compiler-escaping shortcuts is strictly prohibited. Define explicit interfaces or types for all function signatures and data payloads.
-*   **Functional Patterns**: Prefer pure functions, immutability, and explicit error-handling types (e.g., returning an Either/Result type instead of throwing runtime exceptions) where applicable.
-
-### 🎨 UI & Aesthetics
-*   **Premium Visuals**: Avoid default styling or unstyled components. Implement custom CSS styling with CSS variables for dynamic theme support. Add subtle micro-animations (e.g., scale transitions on hover, keyframe loading shimmers).
-*   **Responsive Layouts**: Design mobile-first using CSS Flexbox or Grid. Ensure perfect alignment, consistent padding (using a 4px/8px grid system), and correct contrast ratios for accessibility.
-
-### 🗄️ Database & Transactions
-*   **Schema Migration Guard**: Any schema modification must be represented as a discrete migration file. Direct edits to existing live schemas are forbidden.
-*   **Transaction Integrity**: Multi-table updates or sequential inserts/deletes must be executed within an explicit database transaction block. Always ensure connection pools are released properly.
+- **媒体场景**：`语气清晰、避免夸张承诺` / `标题与段落结构可扫读` / `引用需标注来源，避免版权风险`
+- **生活场景**：`预算超阈值需预警并给替代方案` / `晚间时段避免高强度任务`
+- **开发场景**：`类型严格、禁止绕过检查` / `界面改动需可读且可回归` / `多表写入必须事务化`

@@ -768,12 +768,40 @@ function initGenerator() {
     });
 }
 
+async function initEvalStatus() {
+    const scoreEl = document.getElementById("eval-score");
+    const endedEl = document.getElementById("eval-ended-at");
+    const casesEl = document.getElementById("eval-cases");
+    if (!scoreEl || !endedEl || !casesEl) return;
+
+    try {
+        const resp = await fetch("../artifacts/eval-report.json", { cache: "no-store" });
+        if (!resp.ok) {
+            scoreEl.textContent = "N/A";
+            endedEl.textContent = "未检测到评测报告";
+            return;
+        }
+        const data = await resp.json();
+        scoreEl.textContent = data.score || "--/--";
+        endedEl.textContent = data.ended_at || "--";
+        if (Array.isArray(data.cases)) {
+            const names = data.cases.map((x) => x.name).join(", ");
+            casesEl.textContent = names || "coding, media, life";
+        }
+    } catch (error) {
+        scoreEl.textContent = "N/A";
+        endedEl.textContent = "读取失败";
+        console.warn("eval-report load failed", error);
+    }
+}
+
 // Initial script execution on load
 document.addEventListener("DOMContentLoaded", () => {
     initCopyBtn();
     initTabs();
     initMobileMenu();
     initGenerator();
+    initEvalStatus();
     
     // Load default preset (coding) on startup
     loadConsolePreset("coding");

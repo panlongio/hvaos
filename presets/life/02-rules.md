@@ -1,27 +1,32 @@
-# 02 - Rules Document (Redlines & Boundaries)
+# 02 - 规则文档：红线与约束 (Rules)
 
-This document establishes the hard constraints for schedule coordination and financial allocation. Any suggested actions, travel plans, or purchases violating these rules will be blocked.
+## 1. Blocker（违反即阻断）
 
----
+1. **方案先行**
+- 触发：实质性文件变更/代码编写/大纲重写。
+- 约束：先给可执行方案，获“同意/继续”后执行。
+- 例外：纯只读检查与问答。
+2. **凭证与隐私安全**
+- 触发：涉及密钥、账号、个人信息。
+- 约束：严禁明文提交；敏感信息必须脱敏。
+- 例外：无。
+3. **最小改动原则**
+- 触发：任何修改任务。
+- 约束：只改与任务直接相关的最小范围。
+- 例外：用户明确批准重构。
 
-## 1. Universal Redlines
+## 2. Warning（触发需显式提示）
 
-- **Rules Self-Maintenance & Anti-Bloat**: During the task delivery phase, if the project technical stack or business direction changes, the AI must proactively notify the user and update `01-intent.md` and `04-context.md`. To prevent rule bloat, when updating `04-context.md`, keep at most 5 of the most critical warning items per list. AI is strictly forbidden from modifying this file (`02-rules.md`) without explicit human approval via the Spec Gate.
+- **规则膨胀风险**：`04-context.md` 每类最多保留 5 条，超出需合并。
+- **多代理冲突风险**：仅主代理可写 `.hvaos` 规则文件。
 
-- **Plan Approval Gate (变更确认)**: Before committing to any major calendar shift, subscribing to recurring software, or arranging travel itineraries, the AI assistant MUST present the plan details and receive explicit approval from the user.
-- **Privacy & Masking Guard (隐私脱敏)**: Never write, display, or commit plaintext personal identifiers (e.g., bank card numbers, passport numbers, home addresses, phone numbers). Use masking formats (e.g., `****-****-1234` or `138****5678`) in all visible notes and files.
-- **Decision Recommendation (决策推荐)**: When optimizing itineraries or comparing purchases, the AI must recommend the single most cost-effective and time-efficient option and justify the recommendation.
+## 3. Advice（最佳实践建议）
 
----
+- 面临多方案时，必须给推荐方案和理由。
+- 可复用步骤优先脚本化，减少手工重复。
 
-## 2. Personal Lifestyle Rules
+## 4. 场景规则插槽
 
-### 💰 Finance & Expense Control
-*   **Monthly Budget Gating**: Total monthly discretionary spending is strictly capped at `$1,000` (or local equivalent). Any purchase suggestion that pushes the monthly category budget over 90% must trigger a warning.
-*   **The 48-Hour Rule**: For non-essential purchases exceeding `$100`, enforce a 48-hour cool-off period. The AI must add it to a "wishlist" instead of immediate purchase.
-*   **Recurring Subscriptions**: Before recommending a new subscription, check if there is an existing tool in our list that can serve the same purpose.
-
-### 📅 Calendar & Health Safeguards
-*   **Buffer Time Mandate**: Always reserve a minimum of 45 minutes of buffer time between back-to-back meetings or intensive tasks to allow for rest and cognitive transitions.
-*   **Winding-Down Window**: No focus tasks, work emails, or cognitive stressors are to be scheduled between 9:30 PM and 7:00 AM.
-*   **Exercise Scheduling Lock**: Blocks for exercise (Mon/Wed/Fri at 5:30 PM - 6:30 PM) are locked. They cannot be overwritten or rescheduled unless there is a critical emergency.
+- **媒体场景**：`语气清晰、避免夸张承诺` / `标题与段落结构可扫读` / `引用需标注来源，避免版权风险`
+- **生活场景**：`预算超阈值需预警并给替代方案` / `晚间时段避免高强度任务`
+- **开发场景**：`类型严格、禁止绕过检查` / `界面改动需可读且可回归` / `多表写入必须事务化`

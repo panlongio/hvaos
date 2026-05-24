@@ -1,39 +1,23 @@
-# 05 - Acceptance Document (Quality Gates & UX Standards)
+# 05 - 验收文档：如何判定通过 (Acceptance)
 
-This document represents the quality requirements that every piece of content must meet before it is approved for publication.
+## 1. 可执行验收项（必须可检查）
 
----
+- 静态检查：`文本敏感词检测`
+- 回归检查：`抽样历史稿件对比`
+- 风格审计：`格式与排版检查`
 
-## 1. Compliance & Editorial Pre-checks
+## 2. 人工体验项
 
-The AI assistant must run and pass the following quality pre-checks before submitting the final draft:
-- **Restricted Word Check**: Scan the draft against platform-specific banned lists (e.g., e-commerce advertising restrictions, absolute superlative words).
-- **Code Execution Verification**: Every code snippet included in the text must be checked to ensure it runs correctly and contains no syntax errors.
-- **Link Auditing**: All external links and references must be checked to ensure they are active and secure.
+- 视觉交互标准：`界面清晰、无重叠、主路径可达`
+- 文案表达标准：`表达准确、无绝对化承诺`
 
----
+## 3. 资源预算
 
-## 2. Readability & Engagement UX Standards
+- `新增资源体积受控且可说明`
+- `运行时额外开销可观测`
 
-*   **The 3-Sentence Hook Test**: Read the first three sentences. If they contain generalities or do not immediately present a core pain point, rewrite them.
-*   **Visual Rhythm & Spacing**: Confirm that no paragraph exceeds 4 lines. Ensure there is a blank line separating every paragraph. Key phrases must be bolded.
-*   **Logical Chunking**: Each main section must have a clear takeaway. If a section is longer than 500 words, split it using a subheader (`###`).
+## 4. Blocker 清单（失败即阻断，最多 5 条）
 
----
-
-## 3. Length & Detail Budgets
-
-*   **Word Count**: Standard articles must stay within 1,200 to 1,800 words. Short tutorials must be kept under 800 words to ensure high mobile retention.
-*   **Visual Density**: Every 400 words must be accompanied by a visual element (a code card, a diagram, or a list block) to break up reading fatigue.
-
----
-
-## 4. Negative Gatekeeper (Strictly Unacceptable Outcomes)
-
-> [!CAUTION]
-> **If any of the following flaws exist in the draft, it will be rejected and sent back for editing:**
-> 
-- `Presence of generic clichés (e.g., "In conclusion", "As we all know", "revolutionary solution").`
-- `Hallucinated commands, inaccurate API descriptions, or invalid URLs.`
-- `Excessive use of exclamation marks or overly aggressive marketing language.`
-- `Incomplete placeholder sections (e.g., "[Insert code here]" or "[Explain details later]").`
+1. `存在敏感信息泄露风险`
+2. `核心功能无验证结果`
+3. `引入大范围无关修改`
