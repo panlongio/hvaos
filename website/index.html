@@ -73,6 +73,9 @@
                     <a href="#bootloader" class="btn btn-primary">
                         <i class="fa-solid fa-bolt"></i> 立即使用
                     </a>
+                    <a href="https://github.com/panlongio/hvaos/blob/main/WHITEPAPER.md" target="_blank" class="btn btn-secondary">
+                        <i class="fa-solid fa-book"></i> 技术白皮书
+                    </a>
                     <a href="https://github.com/panlongio/hvaos" target="_blank" class="btn btn-secondary">
                         <i class="fa-brands fa-github"></i> 查看源码
                     </a>
@@ -116,7 +119,7 @@
                     <div class="card-icon"><i class="fa-solid fa-compass"></i></div>
                     <div class="card-layer-num">LAYER 01</div>
                     <h3 class="card-title">01-intent.md (意图层)</h3>
-                    <p class="card-desc"><strong>【解决 AI 偏离主题、瞎写废话的痛点】</strong><br>明确项目的定位、目标受众以及“绝对不做的事”，在源头上直接砍掉 AI 的发散性幻想与偏见。</p>
+                    <p class="card-desc"><strong>【替代产品需求文档 (PRD)】</strong><br>明确项目使命、目标受众与“绝对不做的事 (Anti-Goals)”，从源头限制 AI 概率生成空间，确保开发意图完全对齐。</p>
                 </div>
                 <!-- Layer 2 -->
                 <div class="feature-card" data-layer="2">
@@ -124,7 +127,7 @@
                     <div class="card-icon"><i class="fa-solid fa-gavel"></i></div>
                     <div class="card-layer-num">LAYER 02</div>
                     <h3 class="card-title">02-rules.md (规则层)</h3>
-                    <p class="card-desc"><strong>【解决 AI 自作主张、偷偷乱改的痛点】</strong><br>订立硬性红线与安全门槛。AI 动手前必须先在对话中提交方案并获得你的“同意”或“继续”指令，严禁擅动。</p>
+                    <p class="card-desc"><strong>【替代开发规约与红线】</strong><br>订立硬性开发规范与安全边界。AI 必须在动手前通过 Spec Gate 提交方案并获得人类审批，严禁擅自动手。</p>
                 </div>
                 <!-- Layer 3 -->
                 <div class="feature-card" data-layer="3">
@@ -132,7 +135,7 @@
                     <div class="card-icon"><i class="fa-solid fa-arrows-spin"></i></div>
                     <div class="card-layer-num">LAYER 03</div>
                     <h3 class="card-title">03-processes.md (流程层)</h3>
-                    <p class="card-desc"><strong>【解决 AI 丢三落四、步骤混乱的痛点】</strong><br>硬性规定“先设计、再审批、后执行、必防错”的 6 步标准闭环任务流，保证每次改动的稳健与逻辑清晰。</p>
+                    <p class="card-desc"><strong>【替代操作 SOP 与更新锁】</strong><br>硬性规定“先设计、再审批、后执行、必防错”的闭环流程，并锁死非授权规则篡改权限，防止老旧规则陈旧失效。</p>
                 </div>
                 <!-- Layer 4 -->
                 <div class="feature-card" data-layer="4">
@@ -140,7 +143,7 @@
                     <div class="card-icon"><i class="fa-solid fa-book-bookmark"></i></div>
                     <div class="card-layer-num">LAYER 04</div>
                     <h3 class="card-title">04-context.md (上下文层)</h3>
-                    <p class="card-desc"><strong>【解决 AI 健忘、每次重新解释的痛点】</strong><br>持久化记录您的使用习惯、技术债、专属运行环境和失败避坑指南，让 AI 拥有长期记忆，真正“长记性”。</p>
+                    <p class="card-desc"><strong>【替代系统设计与技术债】</strong><br>持久化记录专有技术栈与已知债务。AI 在交付时在后台自动更新和修剪（上限 5 条），零冗余，无规则负债。</p>
                 </div>
                 <!-- Layer 5 -->
                 <div class="feature-card" data-layer="5">
@@ -148,7 +151,7 @@
                     <div class="card-icon"><i class="fa-solid fa-circle-check"></i></div>
                     <div class="card-layer-num">LAYER 05</div>
                     <h3 class="card-title">05-acceptance.md (验收层)</h3>
-                    <p class="card-desc"><strong>【解决 AI 交付低质量、带低级瑕疵的痛点】</strong><br>设立质量门禁。未通过格式自测、泄露隐私或留有临时占位符等成果一律拦截回退，只有完全合格才能提交。</p>
+                    <p class="card-desc"><strong>【替代 DoD 完成定义与预检门禁】</strong><br>设立严格的质量门禁。未通过格式自测、泄露隐私或遗留临时占位符等成果一律拦截回退，只有完全合格才能提交。</p>
                 </div>
             </div>
         </div>
@@ -379,6 +382,10 @@
                                     <li class="tree-file">
                                         <span class="tree-icon"><i class="fa-regular fa-file-lines"></i></span>
                                         <span class="tree-name">README-HvAOS.md</span>
+                                    </li>
+                                    <li class="tree-file">
+                                        <span class="tree-icon"><i class="fa-regular fa-file-lines"></i></span>
+                                        <span class="tree-name">WHITEPAPER.md</span>
                                     </li>
                                     <li class="tree-dir">
                                         <span class="tree-icon"><i class="fa-regular fa-folder"></i></span>

@@ -2,17 +2,33 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/panlongio/hvaos?style=flat-glowing&color=00f2fe)](https://github.com/panlongio/hvaos)
 [![License](https://img.shields.io/github/license/panlongio/hvaos?style=flat-glowing&color=e100ff)](https://github.com/panlongio/hvaos/blob/main/LICENSE)
+[![HvAOS Technical Whitepaper](https://img.shields.io/badge/Whitepaper-%E6%8A%80%E6%9C%AF%E7%99%BD%E7%9A%AE%E4%B9%A6-blueviolet?style=flat-glowing)](WHITEPAPER.md)
 
 > **HvAOS** 是一个极简、 领域无关（Domain-Neutral）的 AI 协同协议与规则自演进系统。
-> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 行为守护网关（Gatekeeper），通过 5 层结构化卡片与自演进协议，牢牢锁住 AI 的推理边界，彻底告别规则膨胀与技术债。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 行为守护网关（Gatekeeper），通过 5 层结构化卡片与自演进协议，牢牢锁住 AI 的推理边界，彻底告别规则膨胀与技术债。详细底层认知科学依据请阅读 [HvAOS 技术白皮书](WHITEPAPER.md)。
 
 ---
 
 ## ⚠️ 您是否也面临这些 AI 协作痛点？
 
-1. **规则负债 (Rule Debt)**：当规则或提示词文件随着开发无限堆叠，过时的指令与冗余的约束会形成沉重的规则负债。无论是人类还是 AI 都会失去有效阅读和维护它们的能力。
-2. **注意力稀释与语义碰撞 (Attention Dilution & Semantic Collision)**：当海量无序规则同时加载时，大模型在长上下文中产生检索偏差，导致规则相互冲突、注意力涣散，进而引发 AI 自作主张乱改或胡说八道。
-3. **人肉维护惰性 (Maintenance Inertia)**：静态的规则文档需要人类手动更新，一旦遇到项目重构、依赖升级，人类由于工作繁忙或遗忘，无法及时同步，导致规则与实际开发脱节。
+1. **规则负债 (Rule Debt)**：提示词/规则文件无限堆叠，形成沉重规则负债，导致人类与 AI 均失去阅读和维护能力。
+2. **注意力稀释与语义冲突**：海量规则同时加载，导致大模型注意力涣散，指令冲突，引发 AI 乱改或胡说八道。
+3. **人肉维护惰性 (Maintenance Inertia)**：开发方向改变或重构时，人类懒得同步更新静态文档，导致规则迅速失效脱节。
+
+---
+
+## 📋 五维卡片逻辑映射：HvAOS 替代了什么？
+
+HvAOS 并不是新写一堆规则垃圾，而是将传统项目中**散落、无人维护的静态文档**，在文件级别完全解耦映射为了 **5 张高内聚卡片**，让文档活过来：
+
+| 卡片文件名 (File Name) | 传统开发中替代了什么？ (What it Replaces) | 以前的做法 (Before HvAOS) | 现在 HvAOS 的替代与自演进 (After HvAOS) |
+| :--- | :--- | :--- | :--- |
+| **`01-intent.md`**<br>(意图层) | **产品需求文档 (PRD)** | 在 Chat 框中反复对齐需求，AI 经常偏离核心目标与商业边界。 | 填入项目核心使命，规定**“绝对不做的事 (Anti-Goals)”**。从源头限制 AI 的生成概率，防范发散偏离。 |
+| **`02-rules.md`**<br>(规则层) | **编码风格规约 & 安全红线** | 散落在项目中的规则。AI 在长对话中读不完，导致泄漏密钥或乱改代码。 | **逻辑分层的硬性红线与安全栅栏**。强制执行 Spec Gate 方案审批，严禁 AI 擅自篡改红线规则。 |
+| **`03-processes.md`**<br>(流程层) | **标准操作程序 (SOP) & 工作流** | 靠人类口头催促“你下一步干什么”来推进开发，AI 经常丢三落四、跳步。 | 强注入 **6 步标准闭环开发流程**与多智能体更新锁。为 LLM 提供硬性反馈轨，保证步骤完整稳健。 |
+| **`04-context.md`**<br>(上下文层) | **系统架构设计 & 历史技术债** | 每次新开对话都要重新把 README、报错日志、历史避坑经验在对话框中给 AI 解释一遍。 | **持久化记忆与已知债务芯片**。AI 交付任务时在后台自动更新和修剪环境技术债（防膨胀限制在 5 条）。 |
+| **`05-acceptance.md`**<br>(验收层) | **完成定义 (DoD) & 验收测试** | 人类肉眼看代码行，或者等上线报错后才发现低级 TODO 占位符、硬编码漏洞。 | **DoD（定义完成）自测门禁**。所有成果交付前必须通过本地校验（格式、敏感词、无 TODO），否则打回。 |
+
 
 ---
 
