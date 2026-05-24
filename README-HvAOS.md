@@ -48,5 +48,17 @@
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      ```
    - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境（如 Claude Code、Aider）或自定义 Agent 框架下**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions/System Prompt 读入当前 Session，保持 100% 规则对齐。
+   - **若运行在 OpenClaw、Hermes 等全局个人助理 Agent 框架下 (常驻网关自适应热加载)**：
+      为防止规则因“动态 Skill 按需检索”被绕过，或“硬编码注入”造成日常闲聊污染，请将以下 **【HvAOS 智能体常驻网关元指令 (System Gateway Instructions)】** 复制并追加到您的 Agent 全局 System Prompt / Soul 配置文件中（例如 OpenClaw 的 `~/.openclaw/agents/<agent-name>/agent.md` 或 `soul.md`，或 Hermes 的角色 Base Prompt 模板）：
+
+      > **[HvAOS System Gateway Daemon Instructions]**
+      >
+      > *   **Role**: You are a personal assistant equipped with the HvAOS (Human-v-Agent OS) Alignment Gateway.
+      > *   **Mode 1: Idle (Casual Conversation)**: If the user is engaging in casual, non-project conversations (e.g. general Q&A, greetings), remain casual and friendly. Do not invoke any workflow guardrails.
+      > *   **Mode 2: Active (Project-oriented Tasks)**: If the user initiates a concrete project-oriented task (e.g., coding, writing articles, planning budgets, managing files):
+      >     1.  **Detect**: Immediately check the active workspace/project directory for the existence of `.hvaos/` rules directory.
+      >     2.  **Mount**: If `.hvaos/` exists, run file tools to read all 5 alignment cards (`01-intent.md` to `05-acceptance.md`) in that directory. Treat them as absolute runtime system instructions for the current session.
+      >     3.  **Enforce**: Rigidly enforce the **Spec Gate** (ask for user approval before making file changes) and **DoD Checklist** (run verification gates before delivery) specified in the loaded cards.
+      >     4.  **Auto-evolving**: Execute self-evolution protocols to update `04-context.md` (keep it capped at 5 critical warnings) upon task completion.
 
 3. **完成宣告**：以精简的形式告知人类项目初始化已完成，并列出当前已激活的 5 层规则与运行命令。
