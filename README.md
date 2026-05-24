@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/github/license/panlongio/hvaos?style=flat-glowing&color=e100ff)](https://github.com/panlongio/hvaos/blob/main/LICENSE)
 
 > **HvAOS** 是一个极简、 领域无关（Domain-Neutral）的 AI 协同协议与规则自演进系统。
-> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 行为守护网关（Gatekeeper），通过 5 层物理架构和自主演进协议，牢牢锁住 AI 的推理边界，彻底告别规则膨胀与技术债。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 行为守护网关（Gatekeeper），通过 5 层结构化卡片与自演进协议，牢牢锁住 AI 的推理边界，彻底告别规则膨胀与技术债。
 
 ---
 
@@ -21,7 +21,7 @@
 HvAOS 并不是简单地堆凑 Prompt，而是基于大模型底层运行机制进行的科学化结构设计：
 
 *   **In-Context Learning (上下文学习聚焦)**：大模型高度依赖上下文指令来约束生成。HvAOS 强行将所有指令收敛于 **5 张核心图层卡片**。所有自适应规则都在对应卡片内部以“存量增减与修剪”的方式进行，**保持零规则负债**。
-*   **注意力分配优化 (攻克 Lost in the Middle)**：大模型在长上下文的中间部分容易忽略约束。HvAOS 5层架构物理上解耦，AI 助手在任务中仅需按需挂载相关图层，杜绝长文本轰炸，节省 90% 上下文 Token 税。
+*   **注意力分配优化 (攻克 Lost in the Middle)**：大模型在长上下文的中间部分容易忽略约束。HvAOS 5层图层在文件级别上完全解耦，AI 助手在任务中仅需按需挂载相关图层，杜绝长文本轰炸，节省 90% 上下文 Token 税。
 *   **AI 自演进与防膨胀机制 (Self-Maintenance & Pruning)**：AI 在交付阶段（Walkthrough）自动在后台维护 `04-context.md` (技术债与避坑指南)，且各列表硬性上限为 5 条（自动归纳并修剪陈旧项）。既解决了人肉维护惰性，又保证了规则永不失控。
 *   **双向对齐启动协议 (Bootloader)**：启动时由 AI 扫描占位符并以极简交互（每次不超过 5 个多选题）让用户确认意图，从源头上对齐认知，防止 AI “自作主张、留下一堆 TODO 拍屁股走人”。
 

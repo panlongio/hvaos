@@ -200,7 +200,7 @@
                 <span class="badge badge-neon">设计哲学 (Philosophy)</span>
                 <h2 class="section-title">拒绝“规则负债”与“注意力稀释”</h2>
                 <p class="section-subtitle">
-                    像传统自动堆叠或无限生成技能的方案，在运行一段时间后会由于规则累加导致严重的规则负债与语义碰撞。HvAOS 采用“5层物理收敛与自演进”架构，让规则始终保持最高内聚、零冗余。
+                    像传统自动堆叠或无限生成技能的方案，在运行一段时间后会由于规则累加导致严重的规则负债与语义碰撞。HvAOS 采用“5层文件级收敛与自演进”架构，让规则始终保持最高内聚、零冗余。
                 </p>
             </div>
             
@@ -246,7 +246,7 @@
                             </tr>
                             <tr>
                                 <td class="dim-name">语义冲突与幻觉控制</td>
-                                <td class="highlight-val"><strong>极低</strong><br>5层图层物理隔离，结合 MDC 芯片，实现精确的文件路径拦截与挂载</td>
+                                <td class="highlight-val"><strong>极低</strong><br>5层图层文件级强隔离，结合 MDC 芯片，实现精确的文件路径拦截与挂载</td>
                                 <td><strong>高</strong><br>大量规则之间发生重叠或冲突，引起大模型指令混淆，造成决策失准</td>
                                 <td><strong>中到高</strong><br>无结构的 Prompt 极易导致模型在长上下文中产生注意力涣散和幻觉</td>
                             </tr>
@@ -265,7 +265,7 @@
                             <tr>
                                 <td class="dim-name">智能体越权防线</td>
                                 <td class="highlight-val"><strong>严格的权限边界</strong><br>AI 仅自动演进上下文/警告，意图与红线修改必须通过 Spec Gate 人类显式审批</td>
-                                <td><strong>无物理边界</strong><br>AI 在后台拥有绝对的规则自改写权限，容易出现绕过红线行为</td>
+                                <td><strong>无明确边界</strong><br>AI 在后台拥有绝对的规则自改写权限，容易出现绕过红线行为</td>
                                 <td><strong>无边界</strong><br>大模型没有明确的自维护边界，随时可能修改或忽视红线约束</td>
                             </tr>
                         </tbody>

@@ -251,7 +251,7 @@ This document is the quality checkpoint. No delivery is accepted if it fails any
     templates["README-HvAOS.md"] = `# HvAOS (Human vs AI OS) — 人机协作与意图对齐网关使用指南
 
 > **HvAOS** 是一个极简、领域无关的 AI 协同协议与规则自演进系统。
-> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它通过 5 层物理架构与自演进设计，解决 AI 协作中的**规则负债 (Rule Debt)**、**注意力稀释 (Attention Dilution)** 与**维护惰性 (Maintenance Inertia)** 痛点，实现开箱即用的自动化意图对齐与规则装载。
+> **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它通过 5 层逻辑解耦卡片与自演进设计，解决 AI 协作中的**规则负债 (Rule Debt)**、**注意力稀释 (Attention Dilution)** 与**维护惰性 (Maintenance Inertia)** 痛点，实现开箱即用的自动化意图对齐与规则装载。
 
 ---
 
