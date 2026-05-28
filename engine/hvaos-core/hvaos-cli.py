@@ -282,6 +282,10 @@ def main():
     # wizard command
     subparsers.add_parser("wizard", help="交互式意图引导器，智能生成 01-intent.mdc")
 
+    # add-skill command
+    add_skill_parser = subparsers.add_parser("add-skill", help="通过 npx skills add 动态装载全球开源技能包")
+    add_skill_parser.add_argument("package", type=str, help="技能包路径 (例如 vercel-labs/agent-skills@react-best-practices)")
+
     # fork-agent command
     fork_parser = subparsers.add_parser("fork-agent", help="为子智能体派生一份局部的轻量级用户态规则灵魂包")
     fork_parser.add_argument("--name", type=str, required=True, help="子智能体的名称")
@@ -311,6 +315,8 @@ def main():
         compile_rules()
     elif args.command == "wizard":
         run_intent_wizard()
+    elif args.command == "add-skill":
+        add_skill(args.package)
     elif args.command == "fork-agent":
         fork_agent(args.name, args.scope)
     elif args.command == "merge-agent":
@@ -411,10 +417,31 @@ def compile_rules():
         redlines.append("Rule alignment: Always check HvAOS rules card before modifying.")
         redlines.append("align all operations: Keep intent fully aligned with human instructions.")
     
-    # 3. 构造 02-rules.md
+    # 3. 扫描并加载 rules-pool 中的动态技能（渐进式披露）
+    skills_section = ""
+    rules_pool_dir = os.path.join(HVAOS_DIR, "rules-pool")
+    if os.path.exists(rules_pool_dir):
+        skills_found = []
+        for item in os.listdir(rules_pool_dir):
+            if item.endswith(".md") and item != "README.md":
+                skill_filepath = os.path.join(rules_pool_dir, item)
+                skill_name = item[:-3]
+                desc = extract_description(skill_filepath) or "Specialized guidelines and tools repository."
+                skills_found.append((skill_name, desc, skill_filepath))
+                
+        if skills_found:
+            skills_section += "\n## 🔌 AVAILABLE ACTIVE SKILLS (PROGRESSIVE DISCLOSURE)\n\n"
+            skills_section += "If your current task aligns with any of the following specialized domains, you must call the `view_file` tool to read the corresponding detailed guidelines before writing code:\n\n"
+            for name, desc, path_val in skills_found:
+                skills_section += f"- **[SKILL] {name}**: {desc}\n"
+                skills_section += f"  - Guidelines: [SKILL.md](file://{path_val})\n"
+
+    # 4. 构造 02-rules.md
     rules_markdown = "# 02-rules\n\n## STRICT INTERCEPTION & SAFETY REDLINES\n"
     for r in redlines:
         rules_markdown += f"- **[REDLINE]** {r}\n"
+    if skills_section:
+        rules_markdown += skills_section
         
     # 写入文件
     with open(os.path.join(HVAOS_DIR, "02-rules.md"), 'w', encoding='utf-8') as f:
@@ -433,7 +460,7 @@ globs: *
         
     print("[HvAOS] Compile completed. Global & local rules merged.")
     
-    # 4. 自动分发到 IDE 的规则目录中
+    # 5. 自动分发到 IDE 的规则目录中
     ide_dirs = [
         os.path.join(REPO_ROOT, ".cursor", "rules"),
         os.path.join(REPO_ROOT, ".windsurf", "rules")
@@ -453,6 +480,20 @@ globs: *
                         df.write(content)
                 except Exception as e:
                     print(f"[WARN] Failed to distribute {item} to {ide_dir}: {e}", file=sys.stderr)
+        
+        # 将 .hvaos/rules-pool/*.mdc 也全部拷贝分发过去以支持 IDE glob 懒加载热匹配
+        if os.path.exists(rules_pool_dir):
+            for item in os.listdir(rules_pool_dir):
+                if item.endswith(".mdc"):
+                    src = os.path.join(rules_pool_dir, item)
+                    dst = os.path.join(ide_dir, item)
+                    try:
+                        with open(src, 'r', encoding='utf-8') as sf:
+                            content = sf.read()
+                        with open(dst, 'w', encoding='utf-8') as df:
+                            df.write(content)
+                    except Exception as e:
+                        print(f"[WARN] Failed to distribute skill config {item} to {ide_dir}: {e}", file=sys.stderr)
                     
     print("[HvAOS] Rules successfully distributed to active IDE config directories.")
 
@@ -552,6 +593,81 @@ def merge_agent(name: str):
         print(f"[HvAOS] Sub-Agent '{name}' temporary rules directory physically destroyed.")
     except Exception as e:
         print(f"[WARN] Failed to clean sub-agent directory: {e}", file=sys.stderr)
+
+def add_skill(package: str):
+    """通过 npx skills add 动态装载全球开源技能包，并同步到 rules-pool"""
+    print(f"[HvAOS] Executing: npx -y skills add {package} -y ...")
+    
+    # 1. 运行 shell 安装命令
+    import subprocess
+    import shutil
+    try:
+        res = subprocess.run(["npx", "-y", "skills", "add", package, "-y"], 
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if res.returncode != 0:
+            print(f"[ERROR] Failed to run npx skills add: {res.stderr}", file=sys.stderr)
+            sys.exit(1)
+        print(res.stdout)
+    except Exception as e:
+        print(f"[ERROR] Subprocess error: {e}", file=sys.stderr)
+        sys.exit(1)
+        
+    # 2. 检查 .agents/skills 目录，将新发现的 SKILL.md 自动同步到 .hvaos/rules-pool 目录
+    agents_skills_dir = os.path.join(REPO_ROOT, ".agents", "skills")
+    rules_pool_dir = os.path.join(HVAOS_DIR, "rules-pool")
+    os.makedirs(rules_pool_dir, exist_ok=True)
+    
+    if not os.path.exists(agents_skills_dir):
+        print(f"[WARN] No installed skills found under .agents/skills/", file=sys.stderr)
+        return
+        
+    copied_count = 0
+    # 遍历 .agents/skills 中的每个技能文件夹
+    for skill_name in os.listdir(agents_skills_dir):
+        skill_path = os.path.join(agents_skills_dir, skill_name)
+        if os.path.isdir(skill_path):
+            md_src = os.path.join(skill_path, "SKILL.md")
+            if os.path.exists(md_src):
+                # 拷贝为 .hvaos/rules-pool/<skill_name>.md
+                dst_name = f"{skill_name}.md"
+                md_dst = os.path.join(rules_pool_dir, dst_name)
+                try:
+                    shutil.copy2(md_src, md_dst)
+                    # 同时生成配套的 .mdc 元数据文件以供 Cursor 等 IDE 懒加载做 glob 触发匹配
+                    desc = extract_description(md_src) or f"HvAOS rules soul dynamic skill: {skill_name}"
+                    mdc_content = f"""---
+description: {desc}
+globs: *
+---
+# [SKILL] {skill_name}
+To view detailed guidelines for this skill, read the file: file://{md_dst}
+"""
+                    with open(os.path.join(rules_pool_dir, f"{skill_name}.mdc"), 'w', encoding='utf-8') as mf:
+                        mf.write(mdc_content)
+                        
+                    copied_count += 1
+                    print(f"[HvAOS] [SUCCESS] Dynamic skill '{skill_name}' loaded to rules-pool.")
+                except Exception as e:
+                    print(f"[WARN] Failed to copy skill {skill_name}: {e}", file=sys.stderr)
+                    
+    # 3. 自动重新编译 rules 并分发
+    if copied_count > 0:
+        compile_rules()
+
+def extract_description(filepath: str) -> str:
+    """从 SKILL.md YAML frontmatter 中提取 description"""
+    if not os.path.exists(filepath):
+        return None
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+        import re
+        match = re.search(r"^description:\s*(.*)$", content, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+    except Exception:
+        pass
+    return None
 
 if __name__ == "__main__":
     main()
