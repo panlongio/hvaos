@@ -1,6 +1,6 @@
 # HvAOS CodeX Host Socket Integration Guide
 
-本目录提供了将 HvAOS 规则芯片无缝挂载至 **CodeX 桌面端与 AI 检查器** 的适配配置标准。
+本目录提供了将 HvAOS 规则灵魂无缝挂载至 **CodeX 桌面端与 AI 检查器** 的适配配置标准。
 
 ---
 

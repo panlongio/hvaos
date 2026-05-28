@@ -19,7 +19,7 @@
 ```text
 hvaos/ (项目根目录)
 ├── 01-intent.md ... 05-acceptance.md  <-- 1. 干净无编程偏见的“AI规则模板文件”
-├── hvaos-rules/                       <-- 2. 规则芯片模版 (.mdc 卡片)
+├── hvaos-rules/                       <-- 2. 规则灵魂模版 (.mdc 卡片)
 ├── README-HvAOS.md                    <-- 3. 本地集成专属说明书与 AI 引导入口（防 README 冲突）
 ├── README.md                          <-- 4. 开源主库的 GitHub 首页自述与引导说明
 ├── LICENSE                            <-- 5. MIT 开源授权协议

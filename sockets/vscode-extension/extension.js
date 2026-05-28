@@ -50,7 +50,7 @@ function activate(context) {
 }
 
 /**
- * 自动识别项目根目录是否有 .hvaos 芯片，若无则弹出气泡引导
+ * 自动识别项目根目录是否有 .hvaos 规则灵魂，若无则弹出气泡引导
  */
 function autoDetectAndBootstrap() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -61,11 +61,11 @@ function autoDetectAndBootstrap() {
 
     if (!fs.existsSync(hvaosPath)) {
         vscode.window.showInformationMessage(
-            '👋 检测到当前项目尚未装载 HvAOS 规则芯片。是否需要 AI 引导一键激活意图与防错网关？',
-            '一键装载',
+            '👋 检测到当前项目尚未装载 HvAOS 规则灵魂。是否需要 AI 引导一键挂载意图与防错网关？',
+            '一键挂载',
             '忽略'
         ).then(selection => {
-            if (selection === '一键装载') {
+            if (selection === '一键挂载') {
                 runInteractiveWizard();
             }
         });
@@ -311,16 +311,16 @@ async function runInteractiveWizard() {
         placeHolder: 'e.g. npm run build 编译通过。默认无限制'
     });
 
-    // 拼装 python 命令行以调用 hvaos-cli 自主生成芯片
+    // 拼装 python 命令行以调用 hvaos-cli 自主生成灵魂
     const pythonCmd = `python3 "${cliPath}" add-memory "Goals: ${target} | Forbidden: ${antigoals || 'None'} | DoD: ${acceptance || 'None'}" --locked`;
 
     exec(pythonCmd, (error, stdout, stderr) => {
         if (error) {
-            vscode.window.showErrorMessage(`[HvAOS] 芯片装载失败: ${stderr || error.message}`);
+            vscode.window.showErrorMessage(`[HvAOS] 灵魂挂载失败: ${stderr || error.message}`);
             return;
         }
         
-        // 生成 01-intent 核心芯片文件
+        // 生成 01-intent 核心灵魂文件
         const intentMarkdown = `# 01-intent\n\n## Core Goals\n- [ ] ${target}\n\n## Anti-Goals\n- **[RESTRICTED]** ${antigoals || 'None'}\n\n## DoD Acceptance\n- [ ] ${acceptance || 'None'}\n`;
         const mdcTemplate = `---\ndescription: hvaos-intent: Project specific development goals, file boundaries, and anti-goals constraint.\nglobs: *\n---\n${intentMarkdown}`;
         
@@ -339,9 +339,9 @@ async function runInteractiveWizard() {
                 }
             });
             
-            vscode.window.showInformationMessage('🎉 HvAOS 规则芯片已成功装载并激活！AI 防错网关已就位。');
+            vscode.window.showInformationMessage('🎉 HvAOS 规则灵魂已成功挂载并激活！AI 防错网关已就位。');
         } catch (e) {
-            vscode.window.showErrorMessage(`[HvAOS] 写入芯片文件失败: ${e.message}`);
+            vscode.window.showErrorMessage(`[HvAOS] 写入灵魂文件失败: ${e.message}`);
         }
     });
 }

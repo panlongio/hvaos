@@ -281,6 +281,15 @@ def main():
 
     # wizard command
     subparsers.add_parser("wizard", help="交互式意图引导器，智能生成 01-intent.mdc")
+
+    # fork-agent command
+    fork_parser = subparsers.add_parser("fork-agent", help="为子智能体派生一份局部的轻量级用户态规则灵魂包")
+    fork_parser.add_argument("--name", type=str, required=True, help="子智能体的名称")
+    fork_parser.add_argument("--scope", type=str, default="*", help="子智能体的作用域 (如 db, stripe 或 glob 表达式)")
+    
+    # merge-agent command
+    merge_parser = subparsers.add_parser("merge-agent", help="在子智能体任务结束后，汇总合并其踩坑记忆并物理清退其临时目录")
+    merge_parser.add_argument("--name", type=str, required=True, help="子智能体的名称")
     
     args = parser.parse_args()
     
@@ -302,6 +311,10 @@ def main():
         compile_rules()
     elif args.command == "wizard":
         run_intent_wizard()
+    elif args.command == "fork-agent":
+        fork_agent(args.name, args.scope)
+    elif args.command == "merge-agent":
+        merge_agent(args.name)
 
 def run_intent_wizard():
     """交互式意图引导器 (Intent Wizard)"""
@@ -358,7 +371,7 @@ globs: *
     with open(os.path.join(HVAOS_DIR, "01-intent.mdc"), 'w', encoding='utf-8') as f:
         f.write(mdc_template)
         
-    print("\n[OK] 01-intent.mdc 规则芯片已自动智能生成并落盘！")
+    print("\n[OK] 01-intent.mdc 规则灵魂已自动智能生成并落盘！")
     
     # 自动执行 compile 动作以同步并分发规则
     compile_rules()
@@ -442,6 +455,103 @@ globs: *
                     print(f"[WARN] Failed to distribute {item} to {ide_dir}: {e}", file=sys.stderr)
                     
     print("[HvAOS] Rules successfully distributed to active IDE config directories.")
+
+def fork_agent(name: str, scope: str):
+    """为子智能体派生一份局部的轻量级用户态规则灵魂包"""
+    agent_dir = os.path.join(HVAOS_DIR, "agents", name)
+    os.makedirs(agent_dir, exist_ok=True)
+    
+    # 子智能体专用的局部记忆文件夹
+    agent_mems_dir = os.path.join(agent_dir, "memories")
+    os.makedirs(agent_mems_dir, exist_ok=True)
+
+    print(f"[HvAOS] Forking Sub-Agent '{name}' with scope '{scope}'...")
+
+    # 1. 复制并过滤微内核中的 02-rules 规则
+    src_rules = os.path.join(HVAOS_DIR, "02-rules.md")
+    rules_markdown = f"# 02-rules (Sub-Agent: {name} | Scope: {scope})\n\n## INHERITED REDLINES & CONSTRAINTS\n"
+    
+    if os.path.exists(src_rules):
+        with open(src_rules, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        for line in lines:
+            # 只保留匹配的规则或系统核心防线
+            if "[REDLINE]" in line:
+                # 系统绝对硬红线直接放行
+                if any(k in line.lower() for k in ["spec gate", "credential", "interception"]):
+                    rules_markdown += line
+                # 局部匹配 scope 规则
+                elif scope != "*" and scope.lower() in line.lower():
+                    rules_markdown += line
+                elif scope == "*":
+                    rules_markdown += line
+    else:
+        rules_markdown += "- **[REDLINE]** STRICT INTERCEPTION: Enforce sub-agent context check.\n"
+
+    # 2. 写入子 Agent 规则文件
+    with open(os.path.join(agent_dir, "02-rules.md"), 'w', encoding='utf-8') as f:
+        f.write(rules_markdown)
+        
+    mdc_template = f"""---
+description: hvaos-sub-agent-{name} rules matched for scope {scope}.
+globs: {scope if "/" in scope or "*" in scope else "*"}
+---
+{rules_markdown}
+"""
+    with open(os.path.join(agent_dir, "02-rules.mdc"), 'w', encoding='utf-8') as f:
+        f.write(mdc_template)
+
+    # 3. 复制其它的 01-intent, 03-processes, 05-acceptance 等微内核架构文件做只读参考
+    for item in ["01-intent.md", "03-processes.md", "05-acceptance.md"]:
+        src_file = os.path.join(HVAOS_DIR, item)
+        if os.path.exists(src_file):
+            with open(src_file, 'r', encoding='utf-8') as sf:
+                content = sf.read()
+            with open(os.path.join(agent_dir, item), 'w', encoding='utf-8') as df:
+                df.write(content)
+
+    print(f"[HvAOS] [SUCCESS] Sub-Agent '{name}' temporary rules initialized under .hvaos/agents/{name}/")
+
+def merge_agent(name: str):
+    """子智能体任务结束后，汇总合并其踩坑记忆并物理清退其临时目录"""
+    agent_dir = os.path.join(HVAOS_DIR, "agents", name)
+    if not os.path.exists(agent_dir):
+        print(f"[ERROR] Sub-Agent '{name}' directory not found: {agent_dir}", file=sys.stderr)
+        sys.exit(1)
+        
+    agent_mems_dir = os.path.join(agent_dir, "memories")
+    merged_count = 0
+    # 确保全局 memories 目录百分之百存在
+    os.makedirs(MEMORIES_DIR, exist_ok=True)
+    
+    # 1. 汇总子 Agent 在本次 Session 产生的 memory 哈希文件并写入主库
+    if os.path.exists(agent_mems_dir):
+        for f in os.listdir(agent_mems_dir):
+            if f.endswith(".mem"):
+                src_path = os.path.join(agent_mems_dir, f)
+                dst_path = os.path.join(MEMORIES_DIR, f)
+                try:
+                    with open(src_path, 'r', encoding='utf-8') as sf:
+                        data = json.load(sf)
+                    with open(dst_path, 'w', encoding='utf-8') as df:
+                        json.dump(data, df, ensure_ascii=False, indent=2)
+                    merged_count += 1
+                except Exception as e:
+                    print(f"[WARN] Failed to merge sub-agent memory file {f}: {e}", file=sys.stderr)
+
+    print(f"[HvAOS] Merged {merged_count} memories from Sub-Agent '{name}' to main memory base.")
+
+    # 2. 触发全局记忆重排合并与 04-context 更新
+    merge_memories()
+
+    # 3. 物理销毁子 Agent 目录，防止规则膨胀垃圾
+    import shutil
+    try:
+        shutil.rmtree(agent_dir)
+        print(f"[HvAOS] Sub-Agent '{name}' temporary rules directory physically destroyed.")
+    except Exception as e:
+        print(f"[WARN] Failed to clean sub-agent directory: {e}", file=sys.stderr)
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,7 @@
 {
   "name": "hvaos-vscode",
   "displayName": "HvAOS Cognitive Socket",
-  "description": "IDE Rules Chip Socket for Human vs AI OS",
+  "description": "IDE Rules Soul Socket for Human vs AI OS",
   "version": "0.3.0",
   "publisher": "panlongio",
   "engines": {
@@ -18,7 +18,7 @@
     "commands": [
       {
         "command": "hvaos.bootstrap",
-        "title": "HvAOS: 一键激活规则芯片 (Bootstrap Rules Chip)"
+        "title": "HvAOS: 一键激活规则灵魂 (Bootstrap Rules Soul)"
       }
     ]
   }
