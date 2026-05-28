@@ -7,6 +7,23 @@
 
 ---
 
+## 🧠 新会话冷启动与记忆恢复（核心价值）
+
+> [!IMPORTANT]
+> **HvAOS 解决的不只是“规则装载”，还解决了 AI 新开对话后的高成本冷启动问题。**
+
+- **Without HvAOS（常见问题）**：
+  - AI 在新会话中往往需要重新扫描大量项目文件，才能重新拼出“目标、边界、流程、验收标准”。
+  - 这会带来更高的上下文重建成本，以及规则漂移、执行不一致等风险。
+- **With HvAOS（机制变化）**：
+  - AI 先读取 `.hvaos/` 下 5 份关键文档（`01-intent` 到 `05-acceptance`），先建立最小可执行上下文。
+  - 再根据当前任务按需增量读取业务代码与普通文档，而不是一开始就全仓重读。
+- **Outcome（直接收益）**：
+  - 降低新会话冷启动开销，缩短进入可执行状态的时间。
+  - 提升跨会话的一致性，让“改前先同意、交付前先验收”等关键门禁更稳定地被执行。
+
+---
+
 ## 👨‍💻 人类（您）使用说明
 
 *   **安装模式**：
@@ -46,12 +63,23 @@
 2. **装载规则芯片 (.mdc)**：
    > [!NOTE]
    > **「规则芯片」概念澄清**：这里的“芯片”为**纯软件层面的配置规则文件**（如 `.mdc` 等），**无需任何物理硬件支持**。除了支持 IDE 的被动拦截，本协议亦完全兼容命令行终端（如 Claude Code, Aider）及自定义 Agent 框架。
+   >
+   > **`.mdc` 运行机制（关键）**：
+   > 1. `.mdc` 不是可执行脚本，不会自行“运行”；它是规则声明与入口文件。
+   > 2. `.mdc` 的 frontmatter（如 `globs`、`alwaysApply`）用于告诉宿主工具规则的作用范围与应用策略。
+   > 3. 本仓库中的 `.mdc` 正文会引用同名 `.md` 文档（如 `01-intent.mdc -> 01-intent.md`），`.md` 才是完整规则内容。
+   > 4. 真正执行约束的是宿主 Agent/IDE：把这些规则读取进当前会话上下文后，再在任务执行中落实。
    - 将 `.hvaos/` 目录下对应的 5 个规则卡片（如 `01-intent.mdc`）用人类的回答替换卡片中的占位符。
    - **如果项目涉及代码开发或需要激活 IDE 规则拦截机制**，在终端中执行以下符号链接指令，为 IDE（如 Cursor 等）激活规则卡片：
      ```bash
      mkdir -p .cursor && ln -sf ../.hvaos .cursor/rules
      ```
    - **若运行在无 native MDC 规则卡片解析的纯命令行 AI 环境（如 Claude Code、Aider）或自定义 Agent 框架下**：AI 助手必须将本目录下的 5 份 Markdown 规则文档（01-intent 至 05-acceptance）作为全局静态 System Instructions/System Prompt 读入当前 Session，尽可能保持规则对齐。
+     - **Claude Code 推荐执行链路**：
+       1. Detect：检查当前项目是否存在 `.hvaos/` 目录。
+       2. Mount：读取 `01-intent.md` 到 `05-acceptance.md` 五份文档。
+       3. Enforce：任务全过程按五层规则执行（含“改文件前先征得同意”的 Spec Gate）。
+       4. Verify：交付前按 `05-acceptance.md` 的 DoD 清单完成验证并汇报结果。
    - **若运行在 OpenClaw、Hermes 等全局个人助理 Agent 框架下 (常驻网关自适应热加载)**：
       为防止规则因“动态 Skill 按需检索”被绕过，或“硬编码注入”造成日常闲聊污染，请将以下 **【HvAOS 智能体常驻网关元指令 (System Gateway Instructions)】** 复制并追加到您的 Agent 全局 System Prompt / Soul 配置文件中（例如 OpenClaw 的 `~/.openclaw/agents/<agent-name>/agent.md` 或 `soul.md`，或 Hermes 的角色 Base Prompt 模板）：
 

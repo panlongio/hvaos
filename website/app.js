@@ -83,6 +83,34 @@ const generatorConfig = {
     }
 };
 
+const templatePackRegistry = {
+    domain: {
+        saas: {
+            "02-rules.md": "## Domain Overlay - SaaS Rules\n\n- 支付、订阅、发票相关变更必须给出回滚路径。\n- 涉及用户数据迁移必须声明幂等策略与审计记录。\n",
+            "03-processes.md": "## Domain Overlay - SaaS Process\n\n- 发布前增加：账单链路 smoke 测试。\n- 发布后增加：关键指标 30 分钟观测（错误率、支付成功率）。\n"
+        },
+        media: {
+            "02-rules.md": "## Domain Overlay - Media Rules\n\n- 引用第三方观点必须标明出处。\n- 涉及政策/医疗/金融结论必须标注信息时效与来源。\n",
+            "05-acceptance.md": "## Domain Overlay - Media Acceptance\n\n- 发布前必须通过敏感词检测。\n- 标题与摘要必须可读且无绝对化承诺。\n"
+        },
+        life: {
+            "02-rules.md": "## Domain Overlay - Life Rules\n\n- 涉及个人财务信息必须脱敏展示。\n- 预算超阈值操作必须先提示风险再执行。\n",
+            "03-processes.md": "## Domain Overlay - Life Process\n\n- 每次计划变更后需输出“预算影响 + 时间影响”摘要。\n"
+        }
+    },
+    stack: {
+        nextjs: {
+            "03-processes.md": "## Stack Overlay - Next.js Process\n\n- 变更路由或数据获取逻辑后，必须验证构建与关键路由渲染。\n- 若涉及缓存策略，需说明 ISR/SSR 选择理由。\n"
+        },
+        supabase: {
+            "02-rules.md": "## Stack Overlay - Supabase Rules\n\n- 所有多表写入必须事务化。\n- 涉及权限数据读取必须校验 RLS 策略变更影响。\n"
+        },
+        stripe: {
+            "05-acceptance.md": "## Stack Overlay - Stripe Acceptance\n\n- 必须验证 webhook 幂等处理。\n- 必须验证支付成功/失败两条路径与对账一致性。\n"
+        }
+    }
+};
+
 // Markdown Templates Builder
 function generateMarkdownTemplates(projectName, projectMission, presetKey, activeRules) {
     const rulesDetailText = activeRules.map((r, i) => `  ${i + 1}. [Rule] ${r.text}\n     - Detail: ${r.detail}`).join("\n");
@@ -490,6 +518,81 @@ ${templates[`${f}.md`]}
     return templates;
 }
 
+function applyTemplatePacks(templates, selectedDomain, selectedStacks) {
+    const appendOverlay = (filename, label, text) => {
+        if (!templates[filename] || !text) return;
+        templates[filename] += `\n\n---\n\n<!-- Overlay: ${label} -->\n${text}`;
+    };
+
+    if (selectedDomain && templatePackRegistry.domain[selectedDomain]) {
+        const overlays = templatePackRegistry.domain[selectedDomain];
+        Object.entries(overlays).forEach(([file, text]) => appendOverlay(file, `domain/${selectedDomain}`, text));
+    }
+
+    selectedStacks.forEach((stack) => {
+        if (!templatePackRegistry.stack[stack]) return;
+        Object.entries(templatePackRegistry.stack[stack]).forEach(([file, text]) => {
+            appendOverlay(file, `stack/${stack}`, text);
+        });
+    });
+
+    templates["PACK-MANIFEST.md"] = `# Generated HvAOS Template Pack\n\n- domain: ${selectedDomain || "none"}\n- stacks: ${selectedStacks.join(", ") || "none"}\n`;
+    return templates;
+}
+
+function buildOverlaySummary(selectedDomain, selectedStacks) {
+    const lines = [];
+    const fileSources = {};
+    if (selectedDomain && templatePackRegistry.domain[selectedDomain]) {
+        const filesArr = Object.keys(templatePackRegistry.domain[selectedDomain]);
+        const files = filesArr.join(", ");
+        lines.push(`domain/${selectedDomain} -> ${files}`);
+        filesArr.forEach((f) => {
+            fileSources[f] = fileSources[f] || [];
+            fileSources[f].push(`domain/${selectedDomain}`);
+        });
+    }
+    selectedStacks.forEach((stack) => {
+        if (!templatePackRegistry.stack[stack]) return;
+        const filesArr = Object.keys(templatePackRegistry.stack[stack]);
+        const files = filesArr.join(", ");
+        lines.push(`stack/${stack} -> ${files}`);
+        filesArr.forEach((f) => {
+            fileSources[f] = fileSources[f] || [];
+            fileSources[f].push(`stack/${stack}`);
+        });
+    });
+    const conflicts = Object.entries(fileSources)
+        .filter(([, sources]) => sources.length > 1)
+        .map(([file, sources]) => `${file} <- ${sources.join(" + ")}`);
+    return { lines, conflicts };
+}
+
+function renderOverlayPreview(selectedDomain, selectedStacks) {
+    const el = document.getElementById("overlay-preview-content");
+    if (!el) return;
+    const { lines, conflicts } = buildOverlaySummary(selectedDomain, selectedStacks);
+    if (lines.length === 0) {
+        el.textContent = "未选择任何 overlay。";
+        el.classList.remove("has-conflict");
+        return;
+    }
+    const listHtml = `<ul>${lines.map((line) => `<li>${line}</li>`).join("")}</ul>`;
+    if (conflicts.length === 0) {
+        el.innerHTML = listHtml;
+        el.classList.remove("has-conflict");
+        return;
+    }
+    const conflictHtml = `
+<div class="overlay-conflict-note">
+  <strong>冲突提示（警告，不阻断下载）</strong>
+  <ul>${conflicts.map((line) => `<li>${line}</li>`).join("")}</ul>
+  <div class="overlay-conflict-footnote">当前策略：保留全部 overlay 追加结果，请下载后按需微调。</div>
+</div>`;
+    el.innerHTML = `${listHtml}${conflictHtml}`;
+    el.classList.add("has-conflict");
+}
+
 // Console Simulation typing animation
 function loadConsolePreset(presetKey) {
     const consoleCode = document.getElementById("console-code");
@@ -500,12 +603,16 @@ function loadConsolePreset(presetKey) {
     const data = presetsData[presetKey];
     consoleTitle.textContent = data.title;
     
-    // Simulate terminal clean and refresh
-    consoleCode.innerHTML = `<span class="prompt">$</span> loading preset --domain \`${presetKey}\`...\n<span class="log success">[OK] Preset loaded successfully.</span>\n\n`;
+    // Simulate terminal clean and refresh with Socket & Chip style
+    consoleCode.innerHTML = `<span class="prompt">$</span> hvaos socket --mount --preset \`${presetKey}\`
+<span class="log success">[OK] IDE Socket connector initialized.</span>
+<span class="log info">[INFO] Scanning active workspace for alignment chips...</span>
+<span class="log info">[INFO] Detected Chip: .hvaos/02-rules.mdc (${presetKey} preset)</span>
+<span class="log success">[SUCCESS] Hot-swapped rules loaded successfully:</span>\n\n`;
     
     setTimeout(() => {
         consoleCode.innerHTML = data.code;
-    }, 300);
+    }, 500);
 }
 
 // Copy Prompt to Clipboard
@@ -613,6 +720,7 @@ function initGenerator() {
     const projectMissionTextarea = document.getElementById("gen-project-mission");
     const previewZipName = document.getElementById("preview-zip-name");
     const downloadBtn = document.getElementById("btn-download-zip");
+    const domainPackSelect = document.getElementById("gen-domain-pack");
     
     // Custom rule elements
     const addCustomRuleBtn = document.getElementById("btn-add-custom-rule");
@@ -672,6 +780,21 @@ function initGenerator() {
 
     // Render default coding checkboxes on load
     renderGeneratorCheckboxes("coding");
+    renderOverlayPreview("", []);
+
+    if (domainPackSelect) {
+        domainPackSelect.addEventListener("change", () => {
+            const stacks = Array.from(document.querySelectorAll(".stack-pack-group input[type='checkbox']:checked")).map((el) => el.value);
+            renderOverlayPreview(domainPackSelect.value, stacks);
+        });
+    }
+
+    document.querySelectorAll(".stack-pack-group input[type='checkbox']").forEach((el) => {
+        el.addEventListener("change", () => {
+            const stacks = Array.from(document.querySelectorAll(".stack-pack-group input[type='checkbox']:checked")).map((x) => x.value);
+            renderOverlayPreview(domainPackSelect ? domainPackSelect.value : "", stacks);
+        });
+    });
 
     // Click download
     downloadBtn.addEventListener("click", () => {
@@ -691,6 +814,8 @@ function initGenerator() {
         const projectName = projectNameInput.value.trim() || "HvAOS-Workspace";
         const projectMission = projectMissionTextarea.value.trim() || "To run human vs AI alignment rules.";
         const selectedPreset = document.querySelector("input[name='gen-preset']:checked").value;
+        const selectedDomainPack = domainPackSelect ? domainPackSelect.value : "";
+        const selectedStackPacks = Array.from(document.querySelectorAll(".stack-pack-group input[type='checkbox']:checked")).map((el) => el.value);
         
         const activeRules = [];
         const checkboxes = document.querySelectorAll("#dynamic-checkboxes input[type='checkbox']");
@@ -719,7 +844,8 @@ function initGenerator() {
         setTimeout(() => {
             try {
                 // Generate templates structure
-                const filesMap = generateMarkdownTemplates(projectName, projectMission, selectedPreset, activeRules);
+                let filesMap = generateMarkdownTemplates(projectName, projectMission, selectedPreset, activeRules);
+                filesMap = applyTemplatePacks(filesMap, selectedDomainPack, selectedStackPacks);
                 
                 // Initialize JSZip instance
                 const zip = new JSZip();

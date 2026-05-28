@@ -1,0 +1,10 @@
+{
+  "name": "hvaos-codex-adapter",
+  "version": "0.1.0",
+  "description": "HvAOS driver adapter config for CodeX host",
+  "hooks": {
+    "onProjectImport": "bash engine/hvaos-core/verify-hvaos.sh",
+    "onCodeGenerate": "python3 engine/hvaos-core/hvaos-cli.py lazy-load",
+    "onGenerationSuccess": "python3 engine/hvaos-core/hvaos-cli.py prune"
+  }
+}

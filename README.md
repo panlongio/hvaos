@@ -18,6 +18,28 @@
 - 远程模式（可选）：`bash website/install.sh --remote --ref <git-ref>`
 - 远程模式会下载并校验 `website/checksums.txt` 中的 SHA256。
 
+## 🧩 模板包体系（Core / Domain / Stack）
+
+- `packs/core/base`：5 张基础卡（跨场景通用）
+- `packs/domain-pack/*`：行业包（`saas` / `media` / `life`）
+- `packs/stack-pack/*`：技术栈包（`nextjs` / `supabase` / `stripe`）
+
+生成组合模板：
+
+```bash
+bash scripts/build-template-pack.sh \
+  --out ./dist/hvaos-saas-next \
+  --domain saas \
+  --stack nextjs \
+  --stack supabase
+```
+
+校验包结构：
+
+```bash
+bash scripts/verify-packs.sh
+```
+
 > **HvAOS** 是一个极简、 领域无关（Domain-Neutral）的 AI 协同协议与规则自演进系统。
 > **HvA (Human vs AI)** 代表人机双向博弈与意图对齐。它就像您的 AI 行为守护网关（Gatekeeper），通过 5 层结构化卡片与自演进协议，牢牢锁住 AI 的推理边界，显著降低规则膨胀与技术债。详细底层认知科学依据请阅读 [HvAOS 技术白皮书](WHITEPAPER.md)。
 

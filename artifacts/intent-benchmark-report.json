@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-05-24T14:44:57Z",
+  "suite": "intent-benchmark-coding-v1",
+  "runtime_file": "artifacts/intent-runtime.json",
+  "task_count": 5,
+  "metrics": {
+    "baseline": {"fpsr": 0.4000, "rework_rate": 0.8000, "intent_deviation_count": 10, "correction_success_rate": 0.1000},
+    "hvaos": {"fpsr": 1.0000, "rework_rate": 0.0000, "intent_deviation_count": 3, "correction_success_rate": 1.6667},
+    "fpsr_uplift": 1.5000,
+    "fpsr_uplift_target": 0.2000,
+    "meets_target": true
+  },
+  "tasks": [
+    {"id":"coding_spec_alignment","baseline":{"success":0,"rework":1,"deviation":2,"correction_success":0},"hvaos":{"success":1,"rework":0,"deviation":1,"correction_success":1}},
+    {"id":"coding_secret_safety","baseline":{"success":0,"rework":1,"deviation":3,"correction_success":0},"hvaos":{"success":1,"rework":0,"deviation":1,"correction_success":1}},
+    {"id":"coding_minimal_change","baseline":{"success":1,"rework":0,"deviation":1,"correction_success":0},"hvaos":{"success":1,"rework":0,"deviation":0,"correction_success":1}},
+    {"id":"coding_acceptance_discipline","baseline":{"success":1,"rework":1,"deviation":2,"correction_success":1},"hvaos":{"success":1,"rework":0,"deviation":1,"correction_success":1}},
+    {"id":"coding_regression_stability","baseline":{"success":0,"rework":1,"deviation":2,"correction_success":0},"hvaos":{"success":1,"rework":0,"deviation":0,"correction_success":1}}
+  ]
+}

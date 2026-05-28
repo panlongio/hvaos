@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-05-24T14:44:57Z",
+  "runtime_version": "0.1.0",
+  "core_cards": {
+    "intent_spec_yaml": "intent_spec:\  objective:\    project_name: \"{{PROJECT_NAME}}\"\    mission: \"{{PROJECT_MISSION}}\"\    target_audience: \"{{TARGET_AUDIENCE_1}}\"\    core_pain_point: \"{{USER_PAIN_POINT}}\"\  anti_objective:\    - \"{{ANTI_GOAL_1}}\"\    - \"{{ANTI_GOAL_2}}\"\  success_criteria:\    - \"{{SUCCESS_METRIC_1}}\"\    - \"{{SUCCESS_METRIC_2}}\"\  priority:\    north_star_metric: \"{{SUCCESS_METRIC_1}}\"\    secondary_metric: \"{{SUCCESS_METRIC_2}}\"",
+    "runtime_rules_yaml": "runtime_rules:\  blockers:\    - rule_id: \"spec_gate\"\      name: \"方案先行\"\      trigger: \"实质性文件变更/代码编写/大纲重写\"\      check: \"先给可执行方案，且获得同意/继续后才能执行\"\      action_on_violation: \"阻断执行，回退到方案审批\"\    - rule_id: \"privacy_guard\"\      name: \"凭证与隐私安全\"\      trigger: \"涉及密钥、账号、个人信息\"\      check: \"敏感信息脱敏，不得明文提交\"\      action_on_violation: \"阻断输出并要求脱敏\"\    - rule_id: \"minimal_change\"\      name: \"最小改动原则\"\      trigger: \"任何修改任务\"\      check: \"改动范围仅覆盖任务直接相关内容\"\      action_on_violation: \"阻断并要求缩小改动范围\"",
+    "acceptance_assertions_yaml": "acceptance_assertions:\  - assert_id: \"static_checks\"\    method: \"{{STATIC_CHECK_METHOD}}\"\    pass_criteria: \"静态检查命令全部通过且退出码为 0\"\  - assert_id: \"regression_checks\"\    method: \"{{REGRESSION_CHECK_METHOD}}\"\    pass_criteria: \"回归检查全部通过且无 blocker 级失败\"\  - assert_id: \"style_audit\"\    method: \"{{STYLE_AUDIT_METHOD}}\"\    pass_criteria: \"风格审计无阻断项\""
+  },
+  "packs": [
+    {"pack_name":"saas","pack_type":"domain-pack","path":"packs/domain-pack/saas/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"domain.saas\"\  version: \"0.1.0\"\  scenario: \"saas\"\  risk_level: \"medium\"\  expected_gain: \"提升 SaaS 场景任务一致性与上线稳定性\"\  validation_suite: \"intent-benchmark-coding-v1\""},
+    {"pack_name":"media","pack_type":"domain-pack","path":"packs/domain-pack/media/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"domain.media\"\  version: \"0.1.0\"\  scenario: \"media\"\  risk_level: \"low\"\  expected_gain: \"提升发布合规和内容一致性\"\  validation_suite: \"intent-benchmark-media-v1\""},
+    {"pack_name":"life","pack_type":"domain-pack","path":"packs/domain-pack/life/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"domain.life\"\  version: \"0.1.0\"\  scenario: \"life\"\  risk_level: \"low\"\  expected_gain: \"提升计划执行和隐私边界稳定性\"\  validation_suite: \"intent-benchmark-life-v1\""},
+    {"pack_name":"nextjs","pack_type":"stack-pack","path":"packs/stack-pack/nextjs/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"stack.nextjs\"\  version: \"0.1.0\"\  scenario: \"coding\"\  risk_level: \"medium\"\  expected_gain: \"降低渲染边界错误与构建失败\"\  validation_suite: \"intent-benchmark-coding-v1\""},
+    {"pack_name":"supabase","pack_type":"stack-pack","path":"packs/stack-pack/supabase/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"stack.supabase\"\  version: \"0.1.0\"\  scenario: \"coding\"\  risk_level: \"high\"\  expected_gain: \"降低 SQL 误用与策略偏差风险\"\  validation_suite: \"intent-benchmark-coding-v1\""},
+    {"pack_name":"stripe","pack_type":"stack-pack","path":"packs/stack-pack/stripe/PACK.md","metadata_yaml":"pack_metadata:\  pack_id: \"stack.stripe\"\  version: \"0.1.0\"\  scenario: \"coding\"\  risk_level: \"high\"\  expected_gain: \"提升支付流程完整性与对账稳定性\"\  validation_suite: \"intent-benchmark-coding-v1\""}
+  ]
+}

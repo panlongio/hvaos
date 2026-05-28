@@ -5,11 +5,29 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 INSTALL_SCRIPT="$REPO_ROOT/website/install.sh"
 VERIFY_SCRIPT="$SCRIPT_DIR/verify-hvaos.sh"
+BENCHMARK_SCRIPT="$SCRIPT_DIR/intent-benchmark.sh"
 REPORT_DIR="$REPO_ROOT/artifacts"
 REPORT_FILE="$REPORT_DIR/eval-report.json"
+RUN_BENCHMARK="false"
+
+for arg in "$@"; do
+  case "$arg" in
+    --with-benchmark)
+      RUN_BENCHMARK="true"
+      ;;
+    *)
+      echo "[ERROR] unknown option: $arg" >&2
+      echo "Usage: bash scripts/eval-hvaos.sh [--with-benchmark]" >&2
+      exit 1
+      ;;
+  esac
+done
 
 [[ -x "$VERIFY_SCRIPT" ]] || { echo "[ERROR] verify script not executable: $VERIFY_SCRIPT" >&2; exit 1; }
 [[ -f "$INSTALL_SCRIPT" ]] || { echo "[ERROR] install script missing: $INSTALL_SCRIPT" >&2; exit 1; }
+if [[ "$RUN_BENCHMARK" == "true" ]]; then
+  [[ -x "$BENCHMARK_SCRIPT" ]] || { echo "[ERROR] benchmark script not executable: $BENCHMARK_SCRIPT" >&2; exit 1; }
+fi
 mkdir -p "$REPORT_DIR"
 
 run_case() {
@@ -59,7 +77,7 @@ done
 score="$pass/$total"
 ended_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-printf '  ],\n  "score": "%s",\n  "pass": %s,\n  "total": %s,\n  "ended_at": "%s"\n}\n' "$score" "$pass" "$total" "$ended_at" >> "$REPORT_FILE"
+printf '  ],\n  "score": "%s",\n  "pass": %s,\n  "total": %s,\n  "benchmark": {"enabled": %s},\n  "ended_at": "%s"\n}\n' "$score" "$pass" "$total" "$RUN_BENCHMARK" "$ended_at" >> "$REPORT_FILE"
 
 echo "[INFO] score: $score"
 echo "[INFO] report: $REPORT_FILE"
@@ -67,4 +85,9 @@ if [[ "$pass" -ne "$total" ]]; then
   echo "[ERROR] evaluation failed" >&2
   exit 1
 fi
+
+if [[ "$RUN_BENCHMARK" == "true" ]]; then
+  bash "$BENCHMARK_SCRIPT"
+fi
+
 echo "[OK] all evaluation cases passed"

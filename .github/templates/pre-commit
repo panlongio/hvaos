@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# .github/templates/pre-commit
+# 物理拦截：AI 提交代码前强制进行 HvAOS 门禁审计
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+echo "[HvAOS Gateway] Running AI change compliance audit..."
+
+# 运行 verify-hvaos.sh 脚本进行安全和格式审计
+if ! bash "$REPO_ROOT/scripts/verify-hvaos.sh" "$REPO_ROOT"; then
+    echo ""
+    echo "[HvAOS Gateway] [ERROR] Change violates safety redlines or DoD acceptance criteria!"
+    echo "[HvAOS Gateway] [ACTION] Reverting non-compliant changes..."
+    echo ""
+    # 物理回退暂存区
+    git reset HEAD -- .
+    exit 1
+fi
+
+echo "[HvAOS Gateway] [OK] Compliance audit passed. Proceeding with commit."
