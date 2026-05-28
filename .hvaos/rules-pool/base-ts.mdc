@@ -1,0 +1,5 @@
+# BASE-TS SOUL FRAGMENT
+## [Active Redline: Spec Gate Approval Required]
+- **Surgical Coding**: Only modify files that are absolutely necessary for the current step. Never rewrite adjacent code blocks.
+- **Spec Gate Gatekeeper**: AI must present a detailed implementation plan and receive explicit "consent" before editing code.
+- **Strict Typing**: Forbid using 'any' types. Always ensure all TS compiled checks pass without warnings.

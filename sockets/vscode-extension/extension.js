@@ -6,12 +6,16 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
+// 创建一个全局的 OutputChannel 用于记录调试日志，便于用户和 CI 验证
+let outputChannel;
+
 /**
  * 插件激活入口
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-    console.log('[HvAOS Socket] VS Code rule socket activated.');
+    outputChannel = vscode.window.createOutputChannel("HvAOS Socket");
+    outputChannel.appendLine('[HvAOS Socket] VS Code rule socket activated.');
 
     // 自动扫描与 Bootloader 引导
     autoDetectAndBootstrap();
@@ -20,8 +24,22 @@ function activate(context) {
     let bootstrapCmd = vscode.commands.registerCommand('hvaos.bootstrap', function () {
         runInteractiveWizard();
     });
-
     context.subscriptions.push(bootstrapCmd);
+
+    // 监听活跃编辑器变化（双通道灵魂热插拔的核心拦截器）
+    let activeEditorListener = vscode.window.onDidChangeActiveTextEditor(editor => {
+        if (editor) {
+            handleEditorChange(editor);
+        } else {
+            clearActiveSoul();
+        }
+    });
+    context.subscriptions.push(activeEditorListener);
+
+    // 初始化触发一次（应对启动时就已经有文件处于打开状态的冷启动情况）
+    if (vscode.window.activeTextEditor) {
+        handleEditorChange(vscode.window.activeTextEditor);
+    }
 }
 
 /**
@@ -34,7 +52,6 @@ function autoDetectAndBootstrap() {
     const rootPath = workspaceFolders[0].uri.fsPath;
     const hvaosPath = path.join(rootPath, '.hvaos');
 
-    // 如果未检测到 .hvaos 规则芯片，启动新手引导
     if (!fs.existsSync(hvaosPath)) {
         vscode.window.showInformationMessage(
             '👋 检测到当前项目尚未装载 HvAOS 规则芯片。是否需要 AI 引导一键激活意图与防错网关？',
@@ -46,7 +63,124 @@ function autoDetectAndBootstrap() {
             }
         });
     } else {
-        console.log('[HvAOS Socket] Rules chip found. Slot active.');
+        outputChannel.appendLine('[HvAOS Socket] Rules directory found. Slot active.');
+    }
+}
+
+/**
+ * 双通道灵魂拼装与热插拔分发逻辑
+ * @param {vscode.TextEditor} editor 
+ */
+function handleEditorChange(editor) {
+    try {
+        const doc = editor.document;
+        if (!doc) return;
+
+        const filePath = doc.uri.fsPath;
+        const ext = path.extname(filePath).toLowerCase();
+
+        // 仅对常见的代码后缀进行规则热加载匹配，其余文件直接清空
+        if (!['.js', '.jsx', '.ts', '.tsx', '.py', '.go', '.rs'].includes(ext)) {
+            clearActiveSoul();
+            return;
+        }
+
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(doc.uri);
+        if (!workspaceFolder) return;
+        const rootPath = workspaceFolder.uri.fsPath;
+
+        const matchedSouls = [];
+
+        // 通道一：Glob 粗筛
+        if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
+            matchedSouls.push('base-ts');
+        }
+
+        // 通道二：快速正则 Import 分析（仅读取文件头部前 2000 个字符）
+        const headerText = doc.getText().slice(0, 2000);
+        
+        // 匹配 stripe 相关的导入 (import 或 require)
+        const stripeImportRegex = /import\s+[\s\S]*?\s+from\s+['"](?:@stripe\/stripe-js|stripe)['"]/i;
+        const stripeRequireRegex = /require\s*\(\s*['"](?:@stripe\/stripe-js|stripe)['"]/i;
+        if (stripeImportRegex.test(headerText) || stripeRequireRegex.test(headerText)) {
+            matchedSouls.push('stripe');
+        }
+
+        // 匹配 supabase 相关的导入
+        const supabaseImportRegex = /import\s+[\s\S]*?\s+from\s+['"](?:@supabase\/supabase-js)['"]/i;
+        const supabaseRequireRegex = /require\s*\(\s*['"](?:@supabase\/supabase-js)['"]/i;
+        if (supabaseImportRegex.test(headerText) || supabaseRequireRegex.test(headerText)) {
+            matchedSouls.push('supabase');
+        }
+
+        // 如果没有任何灵魂被匹配到，直接清理现存的活跃灵魂卡片
+        if (matchedSouls.length === 0) {
+            clearActiveSoul();
+            return;
+        }
+
+        // 拼接读取 rules-pool 里的文件片段
+        const poolPath = path.join(rootPath, '.hvaos', 'rules-pool');
+        let combinedRules = '';
+
+        matchedSouls.forEach(soulName => {
+            const soulFilePath = path.join(poolPath, `${soulName}.mdc`);
+            if (fs.existsSync(soulFilePath)) {
+                const fragment = fs.readFileSync(soulFilePath, 'utf-8');
+                combinedRules += `\n\n---\n\n${fragment.trim()}`;
+            } else {
+                outputChannel.appendLine(`[HvAOS WARNING] Soul fragment file missing: ${soulFilePath}`);
+            }
+        });
+
+        if (combinedRules.trim() === '') {
+            clearActiveSoul();
+            return;
+        }
+
+        // 拼装最终的 .mdc 灵魂定义文件
+        const activeSoulPath = path.join(rootPath, '.cursor', 'rules', 'active-soul.mdc');
+        const activeSoulDir = path.dirname(activeSoulPath);
+
+        if (!fs.existsSync(activeSoulDir)) {
+            fs.mkdirSync(activeSoulDir, { recursive: true });
+        }
+
+        const fileContent = `---
+description: HvAOS Active Soul - Hot-swapped context and safety rules dynamically injected for the current file
+globs: *
+---
+# HvAOS Active Rules Soul (活跃规则灵魂)
+
+🚨 [STRICT INTERCEPTION] Rules in this soul are active because they match your current file extension and imported dependencies.
+
+${combinedRules.trim()}
+`;
+
+        fs.writeFileSync(activeSoulPath, fileContent, 'utf-8');
+        outputChannel.appendLine(`[HvAOS Socket] [SUCCESS] Active soul dynamically refreshed. Loaded: [${matchedSouls.join(', ')}]`);
+    } catch (e) {
+        outputChannel.appendLine(`[HvAOS ERROR] handleEditorChange failed: ${e.message}`);
+    }
+}
+
+/**
+ * 清除本地活跃灵魂芯片
+ */
+function clearActiveSoul() {
+    try {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) return;
+
+        const rootPath = workspaceFolders[0].uri.fsPath;
+        const activeSoulPath = path.join(rootPath, '.cursor', 'rules', 'active-soul.mdc');
+
+        if (fs.existsSync(activeSoulPath)) {
+            fs.unlinkSync(activeSoulPath);
+            outputChannel.appendLine('[HvAOS Socket] Active soul cleared.');
+        }
+    } catch (e) {
+        outputChannel.appendLine(`[HvAOS ERROR] clearActiveSoul failed: ${e.message}`);
     }
 }
 
@@ -72,7 +206,7 @@ async function runInteractiveWizard() {
 
     // 引导 Q2: 高危禁区
     const antigoals = await vscode.window.showInputBox({
-        prompt: '👉 [Q2/3] 有哪些文件或目录是 AI 绝对禁止触碰和修改的？(无硬性限制请直接回车)',
+        prompt: '👉 [Q2/3] 有哪些文件或目录是 AI 绝对禁止触碰 and 修改的？(无硬性限制请直接回车)',
         placeHolder: 'e.g. 不要碰 api/auth.py。默认无限制'
     });
 
@@ -118,7 +252,7 @@ async function runInteractiveWizard() {
 }
 
 function deactivate() {
-    console.log('[HvAOS Socket] VS Code rule socket deactivated.');
+    outputChannel.appendLine('[HvAOS Socket] VS Code rule socket deactivated.');
 }
 
 module.exports = {

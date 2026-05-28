@@ -1,0 +1,5 @@
+# STRIPE PAYMENT SOUL FRAGMENT
+## [Active Redline: Payment Safety First]
+- **Webhook Idempotency**: All Stripe webhook handlers must verify event signature and implement strict idempotency checks to prevent double-processing.
+- **Credential Protection**: Strictly forbid hardcoding live/test secret Stripe keys. Use environment variables (env.STRIPE_SECRET_KEY) instead.
+- **Error Handling**: Wrap all charge/subscription pipelines with try-catch blocks and record critical diagnostic traces.

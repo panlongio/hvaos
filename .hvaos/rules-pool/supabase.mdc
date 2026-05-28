@@ -1,0 +1,5 @@
+# SUPABASE DATABASE SOUL FRAGMENT
+## [Active Redline: DB Integrity & Security]
+- **RLS Policy Verification**: Any schema changes or table creations must enable Row Level Security (RLS) and define explicit access policies.
+- **Transaction Safety**: Perform DB writes across multiple tables inside a single atomic transaction block to avoid half-committed state.
+- **SQL Sanitization**: Avoid constructing raw SQL strings via string concatenation; always use Supabase client parameterized queries.
