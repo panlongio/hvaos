@@ -109,7 +109,8 @@ def merge_memories():
     """合并 memories/ 下所有的哈希小文件，输出到 04-context.md 和 04-context.mdc"""
     bootstrap_memories_if_empty()
     
-    mem_files = sorted([f for f in os.listdir(MEMORIES_DIR) if f.endswith(".mem")])
+    mem_files = sorted([f for f in os.listdir(MEMORIES_DIR) if f.endswith(".mem")], 
+                       key=lambda x: (0 if x == "temp-heal-error.mem" else 1, x))
     memories: List[Dict[str, Any]] = []
     
     for f in mem_files:
@@ -286,6 +287,11 @@ def main():
     add_skill_parser = subparsers.add_parser("add-skill", help="通过 npx skills add 动态装载全球开源技能包")
     add_skill_parser.add_argument("package", type=str, help="技能包路径 (例如 vercel-labs/agent-skills@react-best-practices)")
 
+    # heal command
+    heal_parser = subparsers.add_parser("heal", help="双环自愈内核：静默运行校验命令，拦截错误代码回滚并注入避坑记忆")
+    heal_parser.add_argument("--file", type=str, required=True, help="被修改的文件路径")
+    heal_parser.add_argument("--cmd", type=str, required=True, help="编译/静态检查校验命令 (例如: npm run build 或 python -m py_compile)")
+
     # fork-agent command
     fork_parser = subparsers.add_parser("fork-agent", help="为子智能体派生一份局部的轻量级用户态规则灵魂包")
     fork_parser.add_argument("--name", type=str, required=True, help="子智能体的名称")
@@ -321,6 +327,8 @@ def main():
         fork_agent(args.name, args.scope)
     elif args.command == "merge-agent":
         merge_agent(args.name)
+    elif args.command == "heal":
+        heal_code(args.file, args.cmd)
 
 def run_intent_wizard():
     """交互式意图引导器 (Intent Wizard)"""
@@ -668,6 +676,98 @@ def extract_description(filepath: str) -> str:
     except Exception:
         pass
     return None
+
+def heal_code(filepath: str, verify_cmd: str):
+    """
+    双环自愈内核：静默运行校验命令，拦截错误代码回滚并注入避坑记忆
+    """
+    import subprocess
+    
+    # 确保 filepath 为绝对路径
+    abs_filepath = os.path.abspath(filepath)
+    if not os.path.exists(abs_filepath):
+        print(f"[HvAOS] [ERROR] Target file not found: {abs_filepath}", file=sys.stderr)
+        sys.exit(1)
+        
+    rel_path = os.path.relpath(abs_filepath, REPO_ROOT)
+    
+    # 1. 尝试获取干净的备份内容
+    is_tracked = False
+    backup_data = None
+    
+    # 检查是否被 git 跟踪
+    ls_res = subprocess.run(["git", "ls-files", "--error-unmatch", rel_path], cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if ls_res.returncode == 0:
+        # 尝试从 HEAD 获取内容
+        show_res = subprocess.run(["git", "show", f"HEAD:{rel_path}"], cwd=REPO_ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if show_res.returncode == 0:
+            backup_data = show_res.stdout
+            is_tracked = True
+            
+    if not is_tracked:
+        # untracked 文件，直接读取当前物理文件
+        try:
+            with open(abs_filepath, 'rb') as f:
+                backup_data = f.read()
+        except Exception as e:
+            print(f"[HvAOS] [WARN] Failed to read untracked file backup: {e}", file=sys.stderr)
+            backup_data = b""
+            
+    # 2. 运行校验命令
+    print(f"[HvAOS] Running validation command: {verify_cmd}")
+    run_res = subprocess.run(verify_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=REPO_ROOT)
+    
+    temp_mem_path = os.path.join(MEMORIES_DIR, "temp-heal-error.mem")
+    
+    # 3. 校验结果判定
+    if run_res.returncode == 0:
+        print("[HvAOS] Validation passed! Code is healthy.")
+        # 成功：物理清理临时报错记忆，并重新 merge
+        if os.path.exists(temp_mem_path):
+            try:
+                os.remove(temp_mem_path)
+                print("[HvAOS] Cleared temporary failure memories.")
+                merge_memories()
+            except Exception as e:
+                print(f"[HvAOS] [WARN] Failed to remove temp memory file: {e}", file=sys.stderr)
+        sys.exit(0)
+    else:
+        print("[HvAOS] [ERROR] Validation failed! Initiating roll-back and memory injection...", file=sys.stderr)
+        
+        # 失败：物理回滚文件
+        if backup_data is not None:
+            try:
+                if not backup_data and not is_tracked:
+                    # 如果原本是 untracked 且没有任何内容，或者原本不存在，物理删除它
+                    if os.path.exists(abs_filepath):
+                        os.remove(abs_filepath)
+                else:
+                    with open(abs_filepath, 'wb') as f:
+                        f.write(backup_data)
+                print(f"[HvAOS] Successfully rolled back {rel_path} to clean state.")
+            except Exception as e:
+                print(f"[HvAOS] [ERROR] Failed to rollback file: {e}", file=sys.stderr)
+        
+        # 捕获 stderr/stdout 最后的报错信息
+        err_msg = run_res.stderr.strip() if run_res.stderr.strip() else run_res.stdout.strip()
+        err_lines = err_msg.splitlines()
+        last_lines = err_lines[-10:] if len(err_lines) > 10 else err_lines
+        snippet = "\n".join(last_lines)
+        
+        # 写入未锁定的局部小记忆
+        os.makedirs(MEMORIES_DIR, exist_ok=True)
+        memory_content = f"STRICT INTERCEPTION ERROR: {rel_path} failed with command '{verify_cmd}'. Error snippet:\n{snippet}"
+        try:
+            with open(temp_mem_path, 'w', encoding='utf-8') as f:
+                json.dump({"content": memory_content, "locked": False}, f, ensure_ascii=False, indent=2)
+            print(f"[HvAOS] Failure memory injected to {temp_mem_path}")
+            
+            # 重新编译刷新全局 04-context.md
+            merge_memories()
+        except Exception as e:
+            print(f"[HvAOS] [ERROR] Failed to write memory file: {e}", file=sys.stderr)
+            
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
