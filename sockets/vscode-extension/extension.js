@@ -6,8 +6,9 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
-// 创建一个全局的 OutputChannel 用于记录调试日志，便于用户和 CI 验证
+// 全局 OutputChannel 与防抖回滚标记
 let outputChannel;
+let isRollingBack = false;
 
 /**
  * 插件激活入口
@@ -35,6 +36,12 @@ function activate(context) {
         }
     });
     context.subscriptions.push(activeEditorListener);
+
+    // 监听文档修改事件（物理防改写控制网关，Milestone 2 核心）
+    let docChangeListener = vscode.workspace.onDidChangeTextDocument(async event => {
+        await handleDocumentChange(event);
+    });
+    context.subscriptions.push(docChangeListener);
 
     // 初始化触发一次（应对启动时就已经有文件处于打开状态的冷启动情况）
     if (vscode.window.activeTextEditor) {
@@ -165,7 +172,95 @@ ${combinedRules.trim()}
 }
 
 /**
- * 清除本地活跃灵魂芯片
+ * 物理防改写控制网关的核心处理入口 (三源对齐拦截器)
+ * @param {vscode.TextDocumentChangeEvent} event 
+ */
+async function handleDocumentChange(event) {
+    // 1. 防死锁防抖判定：如果是回滚本身触发的改变，直接放行重置
+    if (isRollingBack) {
+        isRollingBack = false;
+        return;
+    }
+
+    if (!event.contentChanges || event.contentChanges.length === 0) return;
+
+    const doc = event.document;
+    const editor = vscode.window.activeTextEditor;
+    
+    // 只在活跃编辑器窗口修改时进行 AI 行为检测，防止后台其它非活跃只读文档的变动误判
+    if (!editor || editor.document !== doc) return;
+
+    // 第一源判定：查找是否有单次超过 100 字符的大块代码写入
+    const largeChange = event.contentChanges.find(change => change.text.length > 100);
+    if (!largeChange) return; // 普通打字，予以放行
+
+    const filePath = doc.uri.fsPath;
+    outputChannel.appendLine(`[HvAOS Socket] Large change detected on ${path.basename(filePath)}. Analyzing origin...`);
+
+    // 第二源判定：剪贴板哈希一致性比对 (过滤人类正常的复制代码粘贴)
+    let clipboardText = '';
+    try {
+        clipboardText = await vscode.env.clipboard.readText();
+    } catch (err) {
+        outputChannel.appendLine(`[HvAOS WARNING] Failed to read clipboard: ${err.message}`);
+    }
+
+    if (clipboardText && clipboardText.trim() === largeChange.text.trim()) {
+        outputChannel.appendLine('[HvAOS Socket] Large change matches clipboard. Legitimate user paste allowed.');
+        return;
+    }
+
+    // 锁定为 AI Agent 写入。进行第三源审批状态自检
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(doc.uri);
+    if (!workspaceFolder) return;
+    const rootPath = workspaceFolder.uri.fsPath;
+
+    const keeperPath = path.join(rootPath, '.hvaos', 'gatekeeper.json');
+    
+    // Auto-create default gatekeeper state file if missing
+    if (!fs.existsSync(keeperPath)) {
+        try {
+            const hvaosDir = path.dirname(keeperPath);
+            if (!fs.existsSync(hvaosDir)) {
+                fs.mkdirSync(hvaosDir, { recursive: true });
+            }
+            fs.writeFileSync(keeperPath, JSON.stringify({ ai_write_approved: false, active_task: "None" }, null, 2), 'utf-8');
+        } catch (e) {
+            outputChannel.appendLine(`[HvAOS WARNING] Failed to auto-create gatekeeper.json: ${e.message}`);
+        }
+    }
+
+    let approved = false;
+
+    if (fs.existsSync(keeperPath)) {
+        try {
+            const keeperData = JSON.parse(fs.readFileSync(keeperPath, 'utf-8'));
+            if (keeperData.ai_write_approved === true) {
+                approved = true;
+            }
+        } catch (err) {
+            outputChannel.appendLine(`[HvAOS ERROR] Failed to parse gatekeeper.json: ${err.message}`);
+        }
+    }
+
+    // 已获批：允许 AI 自动写入代码
+    if (approved) {
+        outputChannel.appendLine('[HvAOS Socket] AI write authorized by Spec Gate. Proceeding.');
+        return;
+    }
+
+    // 未获批：物理硬回滚
+    outputChannel.appendLine(`[HvAOS Socket] [BLOCK] Unauthorized AI write detected on file: ${filePath}`);
+    isRollingBack = true;
+
+    // 执行 VS Code 核心 Undo 命令回滚
+    vscode.commands.executeCommand('undo').then(() => {
+        vscode.window.showWarningMessage('⚠️ [HvAOS 强拦截] 检测到 AI 越权写入！方案尚未通过 Spec Gate 审批，修改已被物理回滚。');
+    });
+}
+
+/**
+ * 清除本地活跃灵魂卡片
  */
 function clearActiveSoul() {
     try {
