@@ -25,9 +25,10 @@ if command -v code >/dev/null 2>&1; then
   echo "[HvAOS Socket Builder] VS Code CLI 'code' detected. Installing extension..."
   code --install-extension "hvaos-vscode-0.1.0.vsix"
   echo "[HvAOS Socket Builder] [SUCCESS] hvaos-vscode installed successfully into your VS Code!"
-else
-  echo ""
-  echo "[HvAOS Socket Builder] [WARNING] VS Code command line tool 'code' is not in PATH."
-  echo "[HvAOS Socket Builder] [HINT] Please manually install the generated package: $VS_EXT_DIR/hvaos-vscode-0.1.0.vsix"
-  echo ""
 fi
+
+# 4. Copy to website release directory for static hosting
+mkdir -p "$REPO_ROOT/website/sockets/vscode-extension"
+cp "hvaos-vscode-0.1.0.vsix" "$REPO_ROOT/website/sockets/vscode-extension/hvaos-vscode-0.1.0.vsix"
+echo "[HvAOS Socket Builder] Copied package to website release directory."
+

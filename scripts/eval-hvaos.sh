@@ -90,4 +90,9 @@ if [[ "$RUN_BENCHMARK" == "true" ]]; then
   bash "$BENCHMARK_SCRIPT"
 fi
 
+# Copy report to website release directory for static hosting
+mkdir -p "$REPO_ROOT/website/artifacts"
+cp "$REPORT_FILE" "$REPO_ROOT/website/artifacts/eval-report.json"
+echo "[INFO] Copied eval-report.json to website release directory."
+
 echo "[OK] all evaluation cases passed"

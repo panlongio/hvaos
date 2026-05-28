@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-05-24T14:44:56Z",
+  "cases": [
+    {"name":"coding","status":"passed"},
+    {"name":"coding","status":"passed"},
+    {"name":"media","status":"passed"},
+    {"name":"media","status":"passed"},
+    {"name":"life","status":"passed"}
+    {"name":"life","status":"passed"}
+  ],
+  "score": "3/3",
+  "pass": 3,
+  "total": 3,
+  "benchmark": {"enabled": true},
+  "ended_at": "2026-05-24T14:44:57Z"
+}
+  ],
+  "score": "3/3",
+  "pass": 3,
+  "total": 3,
+  "benchmark": {"enabled": false},
+  "ended_at": "2026-05-24T14:44:57Z"
+}
