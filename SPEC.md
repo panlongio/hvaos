@@ -40,6 +40,9 @@
 spec_version: "1.0"          # 本规范的版本，必需
 name: "my-project"          # 包名，必需
 description: "..."          # 一句话描述，可选
+identity:                   # 可选：外部身份声明的引用，见 §9
+  provider: "agentid"
+  agent_id: "..."
 
 cards:                      # 5 张卡片清单，必需
   - layer: intent
@@ -67,6 +70,7 @@ mounts:                     # 挂载声明，可选
 | `name` | 是 | 包名，`[a-z0-9-]` |
 | `cards[].layer` | 是 | 取值限定：`intent` `rules` `processes` `context` `acceptance` |
 | `cards[].sha256` | 推荐 | Agent 加载时校验完整性，不匹配则拒绝并告警 |
+| `identity` | 否 | 外部身份声明的引用（`provider`/`agent_id`/`owner`），见 §9；HvAOS 只透传、不签发不校验 |
 
 ---
 
@@ -141,7 +145,26 @@ updated: 2026-10-08
 
 ---
 
-## 9. 版本与兼容性
+## 9. 与身份层的关系
+
+本协议是**上下文/约束层**协议，只回答"Agent 记住什么、遵守什么"，不回答"Agent 是谁"。
+
+- **身份层归身份层**：Agent 的身份标识与归属校验由专门的身份协议/服务解决。本协议不签发、不管理身份，只在需要时**消费**身份声明（如 `agent_id`、`owner`）。
+- **兼容现有实现**：身份层可采用任何与 OIDC 兼容的实现，例如 AgentID（AgentMail 推出的商业产品，即"Agent 的 Sign in with Google"：为每个 Agent 签发稳定 ID、已验证邮箱，并标明 `actor_type="agent"`）。本协议对具体选型不做强制要求——AgentID 是身份层的**一种实现**，不是行业标准。
+- **manifest 引用方式**：如需在包内声明身份归属，在 `manifest.yaml` 中以可选字段引用外部身份标识：
+
+```yaml
+identity:                    # 可选
+  provider: "agentid"        # 身份提供方标识
+  agent_id: "..."            # 外部签发的 Agent 稳定 ID
+  owner: "user@example.com"  # 属主已验证邮箱
+```
+
+- **分层原则**：同一个上下文包可以在不同身份的 Agent 之间携带（这正是"普通话"的价值）；身份只决定"谁在使用这个包"，不改变包的内容语义。
+
+---
+
+## 10. 版本与兼容性
 
 - 协议版本遵循 SemVer。
 - `minor`/`patch` 升级向后兼容：旧 Agent 可读新包（忽略未知字段）。
@@ -149,7 +172,7 @@ updated: 2026-10-08
 
 ---
 
-## 10. 开放问题（Roadmap）
+## 11. 开放问题（Roadmap）
 
 - [ ] **Soul Hub**：社区规则市场，一键装载行业 preset（React 规范、SaaS 支付红线等）
 - [ ] **跨 Agent 记忆携带**：把 04-context 的"数字分身"在不同 Agent 间迁移（v2）
