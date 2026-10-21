@@ -4,6 +4,18 @@
 [![License](https://img.shields.io/github/license/panlongio/hvaos?style=flat-glowing&color=e100ff)](https://github.com/panlongio/hvaos/blob/main/LICENSE)
 [![HvAOS Technical Whitepaper](https://img.shields.io/badge/Whitepaper-%E6%8A%80%E6%9C%AF%E7%99%BD%E7%9A%AE%E4%B9%A6-blueviolet?style=flat-glowing)](WHITEPAPER.md)
 
+## 🌐 生态定位：五层协议栈
+
+Agent 生态正在分层成型，各层各管一段，没有一家通吃。HvAOS 只占其中一层——用户↔Agent 的上下文/约束层，这也是目前唯一还没有开放实现的层。
+
+| 层 | 回答的问题 | 代表实现 | 状态（2026-10-21） | 与 HvAOS 的关系 |
+|---|---|---|---|---|
+| **身份层** Identity | Agent 是谁（稳定 ID、归属、可审计） | AgentID（AgentMail，"Agent 版 Sign in with Google"：稳定 ID + 已验证邮箱 + `actor_type="agent"`） | 已上线 | HvAOS 只消费身份声明（`manifest.yaml` 的 `identity` 可选字段），不签发、不校验。见 SPEC §9 |
+| **用户↔Agent 上下文/约束层** Context & Constraint | 用户换一个 agent 时带什么上下文、agent 守什么规矩 | **HvAOS** | SPEC v1.0 已发布（本仓库） | 核心层：意图 / 规则 / 流程 / 上下文 / 验收五层卡片 + `manifest.yaml`，同一个包可在不同身份的 Agent 之间携带 |
+| **Agent↔商家会话层** Session | agent 怎么发现商家、标准登录、一次会话横跨 API / 网页 / 商家自有 agent | PAP v0.2（Meta × Sierra，"Poppy"）：`/.well-known/poppy.json` 做发现、标准 OAuth、会话 JWT | v0.1 发布 2026-10-09；draft 0.2 自 10-18 起推进、10-21 已上线官网 | PAP 完全没碰用户↔agent 层；两层正交互补。注意：PAP 用户 ID 是各公司间不透明、无法关联的——身份层它不管 |
+| **工具调用层** Tool | agent 怎么调用外部工具和数据 | MCP（同周发布 Server Cards 做发现） | 成熟 | PAP 的示例直接把 MCP 列为可选接口类型；与 HvAOS 互补，不打架 |
+| **人↔Agent 多人协作层** Multiplayer | 人和 agent 在共享工作流里实时协作（归属、身份、上下文、治理） | AMP（Atlassian，Team '26 Europe 2026-10-07 发布） | 已发布（Atlassian 平台内） | AMP 把身份（owner + 独立 profile）+ 上下文（Teamwork Graph）+ 治理绑在一起，正是 HvAOS 的分层逻辑；但 AMP **不是开放规范**、只活在 Atlassian 围墙内（第三方实现不了）——跨厂商的开放层依然空着 |
+
 ## ✅ 支持矩阵（最后验证：2026-05-24）
 
 | 环境 | 状态 | 备注 |
